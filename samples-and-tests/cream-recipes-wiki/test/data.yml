@@ -1,0 +1,11 @@
+# Users
+
+# User(bob):
+#   name: bob
+#   email: bob@gmail.com
+#   password: secret
+#   path: /users
+
+# Recipes
+
+#path /recipes

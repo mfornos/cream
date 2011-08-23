@@ -1,0 +1,48 @@
+#{extends 'main.html' /}
+#{set title:'Have fun with our recipes' /}
+
+#{set 'sidebar'}
+	#{if !connected}
+		<div class="box">
+			Have an account?
+			<br /><br />
+			<a href="@{Application.login}" class="button">Sing in</a>
+		</div>
+	#{/if}
+	#{else}
+		<a href="@{Application.add}" class="button">Add recipe</a>
+	#{/else}
+#{/set}
+
+    <div id="recipes">
+	    #{list items:recipes, as:'recipe' }
+	        <div class="recipe">
+	        	<div class="recipe-content">
+		        	#{if recipe.image}
+		        		<a href="@{Application.show(recipe.uuid)}">
+		        			<img class="pict" src="@{Application.getImage(recipe.uuid)}" />
+		        		</a>
+		        	#{/if}
+			        <h1>
+			        	<a class="title" href="@{Application.show(recipe.uuid)}">${recipe.title}</a>
+			        </h1>
+			        <div class="description">${recipe.description}</div>
+		        </div>
+		        <div class="details">
+		        	<a style="float: left;" href="@{Users.show(recipe.author.uuid)}">
+		        		#{gravatar.img recipe.author.email, size:40, default:'identicon' /}
+		        	</a>
+		        	<div style="float: left; margin-left:10px;">
+		        		<a class="author" href="@{Users.show(recipe.author.uuid)}">${recipe.author.email}</a>
+		        		<br/>
+		        		<span class="date">${recipe.created.format('dd MMM yyyy')}</span>
+		        	</div>
+		        </div>
+	        </div>
+	    #{/list}
+	    <div id="footnav">
+			#{pagination page:page ?: 1, size:nbRecipes /}
+			<span style="float:right">${nbRecipes} recipe${nbRecipes.pluralize()}</span>
+		</div>
+	</div>
+	

@@ -1,0 +1,34 @@
+#{extends 'main.html' /}
+#{set title:'New user' /}
+
+<form id="signup" class="cmxform" action="@{Users.create}" method="POST" accept-charset="${_response_encoding}">
+	<fieldset>
+	  <legend>Sign up</legend>
+	  <ol>
+	    <li>
+			<label>Email</label>
+			<input type="text" name="user.email" id="email" value="${user.email}" />
+			<span class="error">#{error 'user.email' /}</span>
+		</li>
+		<li>
+			<label>Display name</label>
+			<input type="text" name="user.name" id="name" value="${user.name}" />
+			<span class="error">#{error 'user.name' /}</span>
+		</li>
+		<li>
+			<label>Password</label>
+			<input type="password" name="user.password" id="password" value="${user.password}" /> <span class="error">#{error 'user.password' /}</span>
+		</li>
+		<li>
+			<label>Password confirm</label>
+			<input type="password" name="passwordConfirm" id="passwordConfirm" /> <span class="error">#{error 'passwordConfirm' /}</span>
+			<p class="light">
+				Enter your desired password twice. It must be at least 5 characters.
+			</p>
+		</li>
+	  </ol>
+	</fieldset>
+	<p class="buttons">
+		<input type="submit" value="Signup" id="signupButton" /> <a href="@{Users.index}" class="cancel">Cancel</a>  
+	</p>	
+</form>

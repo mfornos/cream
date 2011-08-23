@@ -1,0 +1,25 @@
+#{extends 'main.html' /}
+#{set title:'Edit user' /}
+
+<form id="edituser" class="cmxform" action="@{Users.update}" method="POST" accept-charset="${_response_encoding}">
+	<fieldset>
+	  <legend>User data</legend>
+	  <input type="hidden" name="user.uuid" value="${user.uuid}" />
+	   <ol>
+	    <li>
+			<label>Email</label>
+			<input type="text" name="user.email" id="email" value="${user.email}" />
+			<span class="error">#{error 'user.email' /}</span>
+		</li>
+		<li>
+			<label>Display name</label>
+			<input type="text" name="user.name" id="name" value="${user.name}" />
+			<span class="error">#{error 'user.name' /}</span>
+		</li>
+	  </ol>
+	</fieldset>
+	<p class="buttons">
+		<input type="submit" value="Save" id="saveButton" /> <a href="@{Users.show(user.uuid)}" class="cancel">Cancel</a>  
+	</p>	
+</form>
+	  

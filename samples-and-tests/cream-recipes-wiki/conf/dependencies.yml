@@ -1,0 +1,6 @@
+# Application dependencies
+
+require:
+    - play
+    - play -> cream 0.1
+    - play -> gravatar 1.0.1

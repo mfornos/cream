@@ -1,0 +1,759 @@
+@import "reset.css";
+html {
+    overflow-y: scroll;
+    background: #F1EEE0 url(../images/body-bg.jpg);
+    height: 100%;
+}
+body {
+	background: url(../images/top-bg.jpg) no-repeat center top;
+	font: 15px/150% Georgia, "Times New Roman", Times, serif;
+	color: #60493E;
+    line-height: 1.5em !important;
+}
+h1, h2, h3, h4, h5 {
+    font-family: Arial, Helvetica, sans-serif;
+	line-height: 130%;
+	font-weight: bold;
+	color: #453630;
+}
+a {
+    color: #91070B;
+    text-decoration: none;
+}
+a:hover {
+    color: #F54828;
+}
+.wrapper {
+    margin: auto;
+    position: relative;
+    width: 900px;
+}
+.wrapper:after {
+    clear: left;
+    content: " ";
+    display: block;
+}
+.wrapped {
+    width: 650px;
+}
+
+#topbar {
+	width: 100%;
+	background-color: #444444;
+	font-size: 75%;
+	color: #CCCCCC;
+	overflow: hidden;
+	display: block;
+	clear: both;
+	padding: 10px 0 10px 0;
+	border-bottom: 1px solid #888888;
+}
+
+#topbar .box {
+	float: right;
+	padding-right: 50px;
+}
+
+#topbar .box span {
+	margin-right: 10px;
+}
+
+#topbar .box a {
+	color: #FFFFFF;
+	background-color: #555555;
+	border: 1px solid #333333;
+	border-bottom-color: #666666;
+	padding: 2px 10px;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#topbar .box a:hover {
+	background-color: #777777;
+}
+
+#breadcrumbs {
+	margin-left: 50px;
+	margin-top: 10px;
+}
+
+#breadcrumbs .selected {
+	background-color: #F5EC82;
+	background-color: rgba(245, 236, 130, .8);
+}
+
+#breadcrumbs a, #breadcrumbs .selected {
+	line-height: 100%;
+	padding: 4px 7px 4px 7px;
+	-webkit-border-radius: 5em;
+	-moz-border-radius: 5em;
+	border-radius: 5em;
+	-webkit-transition: background-color .7s;
+	-moz-transition: background-color .7s;
+	-o-transition: background-color .7s;
+	transition: background-color .7s;
+}
+
+#breadcrumbs a:hover {
+	color: black;
+	background-color: #F5EC82;
+	background-color: rgba(245, 236, 130, .8);
+}
+
+#out {
+	display: block;
+	overflow: hidden;
+	clear: both;
+	margin: 20px 0;
+}
+
+#content {
+	clear: left;
+	float: left;
+	width: 730px;
+	margin-left: 50px;
+}
+
+#sidebar {
+	float: right;
+    margin: auto;
+    position: relative;
+    width: 170px;
+    margin-left: 5px;
+}
+
+#sidebar .box {
+	padding: 10px;
+	border: 2px solid #F5F2BC;
+	overflow: hidden;
+	display: block;
+	background-color: #FCFBE3;
+	margin-right: 15px;
+	text-align: center;
+}
+
+#sidebar .nav {
+
+}
+
+#sidebar .nav h2 {
+	margin: 20px 5px 10px 0;
+	padding-bottom: 3px;
+	padding-left: 5px;
+	border-bottom: 1px solid #CCCCCC;
+}
+
+#sidebar .nav a {
+	margin: 5px 5px 5px 0;
+	padding-bottom: 3px;
+	padding-left: 5px;
+	border-bottom: 1px solid #EEEEEE;
+	display: block;
+}
+
+#header {
+    height: 80px;
+}
+#logo {
+	overflow: hidden;
+}
+#logo a {
+	/*
+    background: url("../images/mylogo.png") no-repeat scroll 50% 50% transparent;
+    */
+    display: block;
+    left: 50px;
+    position: absolute;
+    font-size: 230%;
+    /*text-indent: -99em;*/
+    top: 14px;
+    color: #FCFBE3;
+    font-family: Georgia, "Times New Roman",Times, serif;
+    text-shadow: -1px -1px 0 #444444;
+}
+#logo a:hover {
+	color: #F8DBDF;
+}
+
+#menu {
+    list-style: none outside none;
+    position: absolute;
+    right: 0;
+    top: 20px;
+}
+#menu li {
+    float: left;
+    position: relative;
+}
+#menu li:last-child {
+    padding-right: 0;
+}
+#menu span {
+    display: none;
+}
+#menu a {
+	font-family: Arial, Helvetica, sans-serif;
+    font-size: 15px;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: #666666;
+    background: #CEE2E2;
+    padding: 5px 15px;
+    margin-right: 5px;
+    border: solid 1px #CACFC3;
+    border-bottom-color: #B5BAAE;
+    -moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+	-webkit-box-shadow: inset 0 1px 0 rgba(255,255,255,0.2);
+}
+#menu a:hover {
+    color: #000000;
+    background: #C5F8EE;
+}
+#menu .selected a {
+    color: #44261C;
+    background: #F8DBDF;
+    border-color: #AA8C7F;
+    border-bottom-color: #886A5F;
+}
+
+#top {
+    border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+    color: #AA5739;
+    padding: 10px 0 0;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+#top p {
+    color: rgba(30, 68, 50, 0.8);
+}
+#top .category {
+    color: #AA5739;
+    font-size: 30px;
+    font-weight: lighter;
+    line-height: 1.4em;
+    margin: 0 auto 10px;
+    padding: 0;
+    width: 900px;
+}
+#top .wrapper {
+    margin: 10px auto;
+}
+
+#footer {
+	background: url("../images/footer_bg.png") repeat scroll 0 0 transparent;
+    margin-top: 40px;
+	background-color: #333333;
+	padding: 40px 0 100px 0;
+	color: #FCFBE3;
+	width: 100%;
+	border-top: 1px solid #AAAAAA;
+	font-size: 80%;
+}
+
+#recipes h1 {
+	font-family: Arial, Helvetica, sans-serif;
+	line-height: 130%;
+	font-weight: bold;
+	font-size: 150%;
+	color: #453630;
+	margin-bottom: 5px;
+}
+
+#recipes h1 a.title {
+	color: #453630;
+    display: block;
+}
+
+#recipes h1 a.title:hover {
+	color: #F54828;
+}
+
+#recipes {
+	overflow: hidden;
+}
+
+#recipes .recipe, #recipe, #user {
+	overflow: hidden;
+	display: block;
+	background-color: #FFFFFF;
+	border: 1px solid #EDEDED;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+}
+
+#recipes .recipe {
+	margin-bottom: 10px;
+}
+
+#recipes .recipe .description {
+}
+
+#recipes .recipe .pict {
+	float: left;
+	margin-right: 8px;
+	max-height: 150px;
+	max-width: 150px;
+	border: 1px solid #EDEDED;
+}
+
+#recipes .recipe .pict:hover {
+	border-color: #F54828;
+}
+
+#recipes .recipe .recipe-content {
+	overflow: hidden;
+	clear: both;
+	display: block;
+	padding: 10px;
+}
+
+#recipes .recipe .details {
+	border-top: 1px solid #EDEDED;
+	background-color: #F8F8F8;
+	margin-top: 5px;
+	padding: 5px 10px;
+	clear: both;
+	display: block;
+	overflow: hidden;
+	font-size: 90%;
+}
+
+#recipes .recipe .details img, #recipe .header img {
+	border: 1px solid #FFFFFF;
+}
+
+#recipes .recipe .details img:hover, #recipe .header img:hover {
+	border-color: #F54828;
+}
+
+#recipes .recipe .date, #recipe .header .date {
+	color: #453630;
+	font-weight: bold;
+}
+
+#recipes #footnav .pagination {
+	float: left;
+	font-family: Arial, sans-serif;
+	overflow: hidden;
+	display: block;
+}
+
+#recipes #footnav .pagination a {
+	padding: 5px;
+}
+
+#recipes #footnav .pagination strong {
+	padding: 5px;
+	color: #CCCCCC;
+	font-weight: normal;
+}
+
+#recipe {
+	padding: 10px;
+}
+
+#recipe .header {
+	overflow: hidden;
+	clear: both;
+	margin-bottom: 10px;
+	display: block;
+}
+
+#recipe .content {
+	background: #F3EFC3 url(../images/line-bg.png) 0 7px;
+	margin: 30px 0;
+	padding: 10px;
+	border: solid 1px #E8E3B8;
+	border-bottom: solid 1px #D9D4A8;
+	overflow: hidden;
+	color: #585535;
+}
+
+#recipe .images {
+	overflow: hidden;
+	margin-right: 10px;
+	float: left;
+}
+
+#recipe .images img {
+	border: 1px solid #FFFFFF;
+	max-width: 700px;
+}
+
+#recipe .body {
+	float: left;
+}
+
+#recipe .body ol {
+    list-style: decimal inside none;
+}
+
+#recipe .body ul {
+    list-style: disc inside none;
+}
+
+#recipt .body li {
+	display: list-item;
+}
+
+#recipe .body h2, #recipe .body h1, #recipe .body h3  {
+	margin-bottom: 10px;
+	color: #585535;
+}
+
+#user {
+	padding: 10px;
+	color: #453630;
+}
+
+#user table.extra {
+	clear: both;
+	display: block;
+	margin: 15px 0;
+	padding-top: 10px;
+}
+
+#user table.extra tr {
+	border-top: 1px solid #DDDDDD;
+}
+
+#user table.extra td {
+	padding: 5px;
+}
+
+#user table.extra td.label {
+	color: #AAAAAA;
+}
+
+#user .header img {
+	
+}
+
+#user h2 {
+	margin-bottom: 15px;
+	padding-bottom: 3px;
+	border-bottom: 1px solid #DDDDDD;
+}
+
+#user .recipes .recipe {
+	margin: 10px 0;
+	display: block;
+	overflow: hidden;
+}
+
+#user .recipes .recipe img.pict {
+	max-width: 100px;
+	float: left;
+	margin-right: 10px;
+	padding: 2px;
+	border: 1px solid #DDDDDD;
+}
+
+#user .recipes .pagination {
+	font-family: Arial, sans-serif;
+}
+
+#user .recipes .pagination strong {
+	padding: 5px;
+	font-weight: normal;
+	color: #AAAAAA;
+}
+
+#user .recipes .pagination a {
+	padding: 5px;
+}
+
+.contextual {
+	float: right;
+	padding: 5px;
+}
+
+form.cmxform fieldset {
+  margin-bottom: 10px;
+}
+form.cmxform legend {
+  padding: 0 2px;
+  font-weight: bold;
+  color: #BBBBBB;
+}
+form.cmxform label {
+  display: inline-block;
+  line-height: 1.8;
+  vertical-align: top;
+}
+form.cmxform fieldset ol {
+  margin: 0;
+  padding: 0;
+}
+form.cmxform fieldset li {
+  list-style: none;
+  padding: 8px 5px;
+  margin: 0;
+}
+form.cmxform fieldset fieldset {
+  border: none;
+  margin: 3px 0 0;
+}
+form.cmxform fieldset fieldset legend {
+  padding: 0 0 5px;
+  font-weight: normal;
+}
+form.cmxform fieldset fieldset label {
+  display: block;
+  width: auto;
+}
+form.cmxform em {
+  font-weight: bold;
+  font-style: normal;
+  color: #f00;
+}
+form.cmxform label {
+  width: 160px; /* Width of labels */
+}
+form.cmxform fieldset fieldset label {
+  margin-left: 123px; /* Width plus 3 (html space) */
+}
+
+form.cmxform legend {
+  padding: 0 2px;
+  font-weight: bold;
+  _margin: 0 -7px; /* IE Win */
+}
+
+/*\*//*/
+form.cmxform legend {
+  display: inline-block;
+}
+/* IE Mac legend fix */
+
+form.cmxform {
+    background-color: #FFFFFF;
+    color: #333333;
+    font-size: 1.1em;
+    margin-bottom: 20px;
+    overflow: hidden;
+    display: block;
+	background-color: #FFFFFF;
+	border: 1px solid #EDEDED;
+	-moz-border-radius: 5px;
+    -webkit-border-radius: 5px;
+    -khtml-border-radius: 5px;
+    border-radius: 5px;
+    padding: 5px;
+}
+form.cmxform legend {
+    padding-left: 0;
+}
+form.cmxform label {
+    color: #333333;
+}
+form.cmxform fieldset {
+    border-color: #DCDCDC;
+    border-right: medium none;
+    border-style: solid none none;
+    border-width: 1px medium medium;
+}
+form.cmxform fieldset fieldset {
+    background: none repeat scroll 0 0 transparent;
+}
+form.cmxform fieldset li {
+
+}
+form.cmxform p {
+    margin: 0;
+    padding: 6px 0;
+}
+form.cmxform label {
+    font-variant: small-caps;
+    margin-left: 5px;
+}
+form.cmxform label small, form.cmxform label em {
+    text-transform: none;
+    color: #8c8c86;
+    font: italic 90% "Times New Roman", Times, serif;
+}
+form.cmxform input, form.cmxform textarea, form.cmxform select {
+    font-size: 100%;
+    font-family: inherit;
+}
+form.cmxform input[type=text], form.cmxform input[type=password], form.cmxform textarea {
+    background: #efecbb;
+    background: rbga(255,247,153,.4);
+    border: none;
+    color: #4b423a;
+    padding: 6px 2%;
+    border-bottom: solid 1px #c8c7b4;
+    -webkit-border-radius: 5px;
+    -moz-border-radius: 5px;
+    border-radius: 5px;
+    -webkit-appearance: none;
+}
+form.cmxform input[type=text] {
+    width: 240px;
+    max-width: 90%;
+}
+form.cmxform textarea {
+    line-height: 150%;
+    width: 450px;
+	height: 100px;
+}
+form.cmxform textarea:focus, form.cmxform input[type=password]:focus, form.cmxform input[type=text]:focus {
+    outline: none;
+    background: #faf7dd;
+}
+
+form.cmxform textarea.large {
+	height: 500px;
+}
+
+form.cmxform .cancel {
+	float: right;
+	text-decoration: none;
+	padding: 4px 9px;
+	color: #FF0000;
+	font-family: 'Lucida Grande',Helvetica,Arial,sans-serif;
+}
+
+form.cmxform .cancel:hover {
+	background-color: #FF0000;
+	color: #FFF;
+}
+
+form.cmxform .buttons {
+	padding: 10px;
+	border-top: 1px solid #DDDDDD;
+}
+
+p.light {
+	font-size: 80%;
+	color: #999;
+}
+
+span.error {
+	color: #ff0000;
+}
+
+a.button:active, form.cmxform input[type=reset]:active, form.cmxform input[type=submit]:active {
+    background: #EEEEEE;
+    border-color: #888888 #888888 #555555;
+}
+
+a.button, form.cmxform input[type=reset], form.cmxform input[type=submit] {
+    background: #F6F6F6; /* for non-css3 browsers */
+	filter: progid:DXImageTransform.Microsoft.Gradient(startColorStr=#ffffff,endColorStr=#efefef);
+	background: -webkit-gradient(linear,left top,left bottom,from(#ffffff),to(#efefef));
+	background: -moz-linear-gradient(top,#ffffff,#efefef);
+    border-color: #CCCCCC;
+    -moz-border-radius: 4px;
+    -webkit-border-radius: 4px;
+    -khtml-border-radius: 4px;
+    border-radius: 4px;
+    border-style: solid;
+    border-width: 1px;
+    color: #333333;
+    cursor: pointer;
+    display: inline-block;
+    padding: 4px 9px;
+    text-decoration: none;
+    font-weight: bold;
+    text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+    font-family: 'Lucida Grande',Helvetica,Arial,sans-serif;
+}
+
+a.button:hover, a.button:focus, form.cmxform input[type=reset]:hover, form.cmxform input[type=submit]:hover {
+    border-color: #999999 #999999 #666666;
+    text-decoration: none;
+    color: #000000;
+}
+
+div.info, div.success, div.warning, div.error, div.validation {
+	border: 1px solid;
+	margin: 10px 0 25px 0;
+	padding:15px 10px 15px 50px;
+	background-repeat: no-repeat;
+	background-position: 10px center;
+}
+div.info {
+	color: #00529B;
+	background-color: #BDE5F8;
+	background-image: url('../images/info.png');
+}
+div.success {
+	color: #4F8A10;
+	background-color: #DFF2BF;
+	background-image:url('../images/success.png');
+}
+div.warning {
+	color: #9F6000;
+	background-color: #FEEFB3;
+	background-image: url('../images/warning.png');
+}
+div.error {
+	color: #D8000C;
+	background-color: #FFBABA;
+	background-image: url('../images/error.png');
+}
+
+.table-bar {
+	color: #222222;
+	background: #EDEDED;
+	padding: 8px;
+	overflow: hidden;
+	display: block;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+.table-bar .pagination {
+	float: left;
+	width: 80%;
+}
+
+.table-bar .pagination strong {
+	color: #AAAAAA;
+	padding: 5px;
+	font-weight: normal;
+}
+
+.table-bar .pagination a {
+	padding: 5px;
+}
+
+table.gray
+{
+	margin: 0;
+	width: 100%;
+	text-align: left;
+	border-collapse: collapse;
+	background-color: #FFFFFF;
+}
+
+table.gray th
+{
+	padding: 8px;
+	font-weight: bold;
+	color: #222222;
+	background: #EDEDED;
+	text-shadow: 1px 1px 0 rgba(255, 255, 255, 0.3);
+}
+
+table.gray a {
+	display: block;
+}
+
+table.gray td
+{
+	padding: 8px;
+	border-top: 1px solid #EDEDED;
+}
+
+table.gray tbody tr:hover td
+{
+	background: #FFFFCF;
+	color: black;
+}

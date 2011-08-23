@@ -1,0 +1,18 @@
+h1. Cream module
+
+Cream module that integrates seamesly Apache Jackrabbit (JCR 2.0) with Play framework.
+
+h2. <a>Features</a>
+
+* OCM
+** Uses jcrom as the underlying object-to-content mapper
+
+* play.db.Model support
+
+* CRUD support
+
+* Data binding and validation
+
+h2. <a>Usage</a>
+
+[here... the usage.. patience :)]

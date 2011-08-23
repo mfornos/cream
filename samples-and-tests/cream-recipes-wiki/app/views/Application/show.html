@@ -1,0 +1,50 @@
+#{extends 'main.html' /}
+#{set title:recipe.title /}
+
+#{set 'sidebar'}
+	
+#{/set}
+
+#{set 'bread'}
+	<div id="breadcrumbs">
+		<a href="@{Application.index}">Recipes</a> / <span class="selected">${recipe.title}</span>
+	</div>
+#{/set}
+
+<div id="recipe">
+	<div class="header">
+		<div class="contextual">
+			#{if editable == true}
+				<a href="@{Application.edit(recipe.uuid)}" class="button">Edit</a>
+				<a href="" class="button">History</a>
+				#{if connected && (connected.admin || recipe.isOwner(connected.uuid))}
+					<a href="@{Application.delete(recipe.uuid)}" onclick="return confirm('Are you sure?');" class="button" >Delete</a>
+				#{/if}
+			#{/if}
+		</div>
+		<div>
+			<a style="float: left;" href="@{Users.show(recipe.author.uuid)}">
+				#{gravatar.img recipe.author.email, size:40, default:'identicon' /}
+			</a>
+			<div style="float: left; margin-left:10px;">
+				<a class="author" href="@{Users.show(recipe.author.uuid)}">${recipe.author.email}</a>
+				<br/>
+				<span class="date">${recipe.created.format('dd MMM yyyy')}</span> (${recipe.version})	${recipe.accessLevel}</span>
+			</div>
+		</div>
+	</div>
+	<div class="description">
+		${recipe.description}
+	</div>
+	<div class="content">
+		<div class="images">
+			#{if recipe.image}
+			   <img class="pict" src="@{Application.getImage(recipe.uuid)}" />
+			#{/if}
+		</div>
+		<div class="body">
+			${recipe.body.raw()}
+		</div>
+	</div>
+</div>
+

@@ -1,0 +1,59 @@
+#{extends 'main.html' /}
+#{set title:user.name /}
+
+#{set 'sidebar'}
+
+#{/set}
+
+#{set 'bread'}
+	<div id="breadcrumbs">
+		<a href="@{Users.index}">Users</a> / <span class="selected">${user.name}</span>
+	</div>
+#{/set}
+
+<div id="user">
+	#{if connected && connected.admin == true}
+		<div class="contextual">
+			<a href="@{Users.edit(user.id)}" class="button">Edit</a>
+			<a href="@{Users.delete(user.id)}" onclick="return confirm('Are you sure?');" class="button">Delete</a>
+		</div>
+	#{/if}
+	<div class="header">
+		<span style="float: left;">
+			#{gravatar.img user.email, size:40, default:'identicon' /}
+		</span>
+		<div style="float: left; margin-left:10px;">
+			${user.name}
+			<br/>
+			${user.email}
+		</div>
+	</div>
+	<table class="extra" border="0">
+		<tbody>
+		<tr><td class="label">Path:</td><td>${user.path}</td></tr>
+		<tr><td class="label">Admin:</td><td>${user.admin}</td></tr>
+		<tr><td class="label">Created:</td><td>${user.created.format('dd MMM yyyy')}</td></tr>
+		</tbody>
+	</table>
+	#{if recipes}
+		<h2>${nbRecipes} recipe${nbRecipes.pluralize()}</h2>
+		<div class="recipes">
+			#{list items:recipes, as:'recipe' }
+		        <div class="recipe">
+		        	<div class="recipe-content">
+			        	#{if recipe.image}
+			        		<a href="@{Application.show(recipe.uuid)}">
+			        			<img class="pict" src="@{Application.getImage(recipe.uuid)}" />
+			        		</a>
+			        	#{/if}
+				        <h1>
+				        	<a class="title" href="@{Application.show(recipe.uuid)}">${recipe.title}</a>
+				        </h1>
+				        <div class="description">${recipe.description}</div>
+			        </div>
+			     </div>
+			#{/list}
+			#{pagination page:page ?: 1, size:nbRecipes /}
+		</div>
+	#{/if}
+</div>

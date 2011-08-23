@@ -1,0 +1,8 @@
+
+/.settings
+/dist
+/derby.log
+/eclipse
+/.classpath
+/.project
+/samples-and-tests/cream-simple-test/repository

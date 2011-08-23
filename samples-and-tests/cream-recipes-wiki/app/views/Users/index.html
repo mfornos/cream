@@ -1,0 +1,32 @@
+#{extends 'main.html' /}
+#{set title:'Registered users' /}
+
+#{if connected?.admin}
+	#{set 'sidebar'}
+		<a href="@{Users.add}" class="button">Add user</a>
+	#{/set}
+#{/if}
+
+<table id="users-list" class="gray">
+	<thead>
+		<tr>
+			<th class="main">Name</th>
+			<th class="infos">Email</th>
+		</tr>
+	</thead>
+	#{list items:users, as:'user'}
+		<tr>
+			<td class="main">
+				<a href="@{Users.show(user.uuid)}">${user.name}</a>
+			</td>
+			<td class="infos">
+				${user.email}
+			</td>
+		</tr>
+	#{/list}
+</table>
+
+<div class="table-bar">
+	#{pagination page:page ?: 1, size:nbUsers /}
+	<span style="float:right">${nbUsers} user${nbUsers.pluralize()}</span>
+</div>
