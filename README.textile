@@ -155,7 +155,7 @@ h2. <a href="sch">Full Text Search</a>
 
 Jackrabbit is able to index binary content and text, of course. http://jackrabbit.apache.org/jackrabbit-text-extractors.html
 
-Full text search is achieved by the means of the contains clause:
+Full text search is achieved by the means of contains clause:
 
 bc.. # 6.7.19 FullTextSearch (p 113)
 select * from test where contains(name, 'hello -world')
