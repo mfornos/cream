@@ -11,6 +11,6 @@ import java.lang.annotation.Target;
 @Target({ ElementType.TYPE, ElementType.METHOD })
 public @interface JcrSession {
 
-	public String workspace() default "";
+    public String workspace() default "";
 
 }

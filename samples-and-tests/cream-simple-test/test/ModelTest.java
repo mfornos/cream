@@ -14,23 +14,23 @@ import play.test.UnitTest;
 @JcrSession
 public class ModelTest extends UnitTest {
 
-	@Before
-	public void setup() {
-		Fixtures.deleteAllModels();
-	}
+    @Before
+    public void setup() {
+        Fixtures.deleteAllModels();
+    }
 
-	@Test
-	public void testModel() throws RepositoryException {
-		Fixtures.loadModels("data.yml");
-		// Session session = play.modules.cream.JcrPlugin.getCurrentSession();
-		// Dumper.dumpTree(session.getRootNode());
-		JcrQuery<Restaurant> restaurants = Restaurant.all("/restaurant");
-		assertEquals(2, restaurants.count());
-		assertEquals("petit", restaurants.first().chef.name);
+    @Test
+    public void testModel() throws RepositoryException {
+        Fixtures.loadModels("data.yml");
+        // Session session = play.modules.cream.JcrPlugin.getCurrentSession();
+        // Dumper.dumpTree(session.getRootNode());
+        JcrQuery<Restaurant> restaurants = Restaurant.all("/restaurant");
+        assertEquals(2, restaurants.count());
+        assertEquals("petit", restaurants.first().chef.name);
 
-		Company company = Company.get("/company/flashlight");
-		assertNotNull(company);
-		assertEquals(2, company.restaurants.size());
-	}
+        Company company = Company.get("/company/flashlight");
+        assertNotNull(company);
+        assertEquals(2, company.restaurants.size());
+    }
 
 }

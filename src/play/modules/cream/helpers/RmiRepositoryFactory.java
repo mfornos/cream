@@ -14,15 +14,16 @@
 
 package play.modules.cream.helpers;
 
+import java.net.MalformedURLException;
+import java.rmi.NotBoundException;
+import java.rmi.RemoteException;
+
+import javax.jcr.Repository;
+
 import org.apache.jackrabbit.rmi.client.ClientAdapterFactory;
 import org.apache.jackrabbit.rmi.client.ClientRepositoryFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import javax.jcr.Repository;
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
 
 /**
  * @author <a href="mailto:topping@codehaus.org">Brian Topping</a>
@@ -31,14 +32,11 @@ import java.rmi.RemoteException;
  */
 
 public class RmiRepositoryFactory {
-	@SuppressWarnings("unused")
-	private static final Logger log = LoggerFactory
-			.getLogger(RmiRepositoryFactory.class);
+    @SuppressWarnings("unused")
+    private static final Logger log = LoggerFactory.getLogger(RmiRepositoryFactory.class);
 
-	static Repository getRmiRepository(String url)
-			throws MalformedURLException, NotBoundException, RemoteException {
-		ClientRepositoryFactory factory = new ClientRepositoryFactory(
-				new ClientAdapterFactory());
-		return factory.getRepository(url);
-	}
+    static Repository getRmiRepository(String url) throws MalformedURLException, NotBoundException, RemoteException {
+        ClientRepositoryFactory factory = new ClientRepositoryFactory(new ClientAdapterFactory());
+        return factory.getRepository(url);
+    }
 }

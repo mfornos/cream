@@ -13,39 +13,39 @@ import play.modules.cream.Model;
 @JcrNode(mixinTypes = { "mix:created", "mix:lastModified", "mix:versionable" })
 public class Recipe extends Model {
 
-	public enum AccessLevel {
-		PUBLIC, PRIVATE
-	}
+    public enum AccessLevel {
+        PUBLIC, PRIVATE
+    }
 
-	@JcrName
-	public String name;
+    @JcrName
+    public String name;
 
-	@JcrProperty
-	@Required
-	public String title;
+    @JcrProperty
+    @Required
+    public String title;
 
-	@JcrProperty
-	@Required
-	public String description;
+    @JcrProperty
+    @Required
+    public String description;
 
-	@JcrProperty
-	@Required
-	public String body;
+    @JcrProperty
+    @Required
+    public String body;
 
-	@JcrReference
-	public User author;
+    @JcrReference
+    public User author;
 
-	@JcrProperty
-	public AccessLevel accessLevel;
+    @JcrProperty
+    public AccessLevel accessLevel;
 
-	@JcrFileNode
-	public JcrFile image;
+    @JcrFileNode
+    public JcrFile image;
 
-	public boolean isOwner(String id) {
-		return author.uuid.equals(id);
-	}
+    public boolean isOwner(String id) {
+        return author.uuid.equals(id);
+    }
 
-	public boolean isPublic() {
-		return AccessLevel.PUBLIC.equals(accessLevel);
-	}
+    public boolean isPublic() {
+        return AccessLevel.PUBLIC.equals(accessLevel);
+    }
 }

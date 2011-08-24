@@ -1,14 +1,12 @@
-import javax.jcr.Node;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-
-import controllers.Application;
 
 import play.exceptions.UnexpectedException;
 import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.cream.helpers.JcrRepositoryHelper;
 import play.test.Fixtures;
+import controllers.Application;
 
 @OnApplicationStart
 public class Bootstrap extends Job {
