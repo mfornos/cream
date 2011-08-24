@@ -170,7 +170,7 @@ select * from test as x where score(x)<1
 
 p. Result excerpts. Still not supported in Jackrabbit 2. However you can use the old syntax, for example:
 
-bc..  // XXX see
+bc.. // XXX see
 // http://jackrabbit.510166.n4.nabble.com/Use-of-excerpt-with-SQL2-td3249018.html
 // waiting for excerpt support with SQL-2
 try {
