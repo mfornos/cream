@@ -99,7 +99,8 @@ bc.. public void someMethod() {
 
 p. An example of Controller
 
-bc.. public class... {
+bc.. @JcrSession
+public class MyController extends Controller {
     
     ...
     
@@ -113,6 +114,7 @@ bc.. public class... {
        
        entity.path = "/path";
        entity.create();
+       
        index(1);
     }
     
