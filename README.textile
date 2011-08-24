@@ -1,11 +1,15 @@
 h1. Cream module
 
-A module that integrates seamesly Apache Jackrabbit (JCR 2.0) with Play framework.
+A module that seamlessly integrates Apache Jackrabbit (JCR 2.0) with Play framework.
 
-h2. <a>Features</a>
+h2. <a name="fts">Features</a>
 
 * OCM
 ** Uses jcrom as the underlying object-to-content mapper
+
+* Content version management
+
+* Full text search
 
 * play.db.Model support
 
@@ -13,6 +17,133 @@ h2. <a>Features</a>
 
 * Data binding and validation
 
-h2. <a>Usage</a>
+h2. <a name="usg">Usage</a>
 
-[here... the usage.. patience :)]
+Declare the proper dependency in conf/dependencies.yml
+
+bc.. require:
+    - play
+    - play -> cream 0.1
+    
+p. and let Play download and install the dependencies 
+
+bc.. $ play deps
+    
+p. Configure Cream in conf/application.conf
+
+bc.. ## Cream module configuration
+cream.jcr.url=file://tmp-repo
+cream.jcr.username=admin
+cream.jcr.password=admin
+cream.jcr.workspace=default
+# Path to your jackrabbit configuration.
+# A default configuration will be used 
+# if you don't specify any
+#cream.jcr.configuration=conf/cream-repository.xml 
+
+## Testing
+%test.cream.jcr.mode=transient
+
+
+p. Annotate your model classes (see jcrom and Play validation for extended details)
+
+bc.. @JcrNode(mixinTypes = { "mix:created", "mix:lastModified", "mix:referenceable" })
+public class User extends Model {
+
+    @JcrName // this is the node name
+    @Required
+    public String name; 
+
+    @JcrProperty
+    @Required
+    @Email
+    public String email;
+
+    @JcrProperty
+    @MinSize(5)
+    public String password;
+    
+    ...
+}
+
+p. Note: model classes managed by Cream plugin must be annotated with @JcrNode (normally with at least mix:referenceable) but jcrom doesn't require it.
+
+You need to open a jcr session in order to access the model from the controllers. To achieve it you have these options:
+
+1) Annotate a Controller with @JcrSession
+
+bc.. @JcrSession
+public class Application extends Controller {
+    ...
+}
+
+p. 2) Inject a session on the Controller with @Inject
+
+bc.. public class Application extends Controller {
+
+    @Inject
+    static javax.jcr.Session jcrSession;
+    
+    ...
+}
+
+p. 3) Do it manually
+
+bc.. public void someMethod() {
+    Session session = JcrRepositoryHelper.openSession();
+    try {
+        ...
+    } finally {
+        session.logout();
+    }
+}
+
+p. An example of Controller
+
+bc.. public class... {
+    
+    ...
+    
+    public static void create(@Valid MyEntity entity) {
+       if (validation.hasErrors()) {
+            validation.keep();
+            params.flash();
+            flash.error("Please correct these errors !");
+            add(entity);
+       }
+       
+       entity.path = "/path";
+       entity.create();
+       index(1);
+    }
+    
+    public static void index(Integer page) {
+        
+        JcrQuery result = MyEntity.findAll("/path");
+        long nbMyEntity = result.count();
+        List<MyEntity> entities = result.fetch(page, pageSize);
+        
+        
+        // Unsafe assignation, use RenderArgs instead :P
+        page = (page != null) ? Math.max(page, 1) : 1; 
+        render(nbMyEntity, entities, page);
+   }
+   
+   ...
+}
+
+p. Note: if you don't specify a jcr path the simple class name will be used by default.
+
+See cream/samples-and-test for more examples...
+
+p. To use Cream with CRUD simply annotate your  Controller with @JcrSession
+
+bc.. @JcrSession
+public class Users extends CRUD {
+
+}
+
+p. You can use Fixtures normally for your tests and initial data loading.
+
+p. // and more to come...
+

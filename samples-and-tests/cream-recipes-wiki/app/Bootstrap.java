@@ -13,10 +13,10 @@ public class Bootstrap extends Job {
 
     // XXX wire the session in Jobs?
     // @Inject
-    private Session session;
+    // private Session session;
 
     public void doJob() {
-        session = JcrRepositoryHelper.openSession();
+        Session session = JcrRepositoryHelper.openSession();
         try {
             if (!session.nodeExists(Application.RECIPES_PATH)) {
                 Fixtures.loadModels("initial-data.yml");
