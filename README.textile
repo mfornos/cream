@@ -44,7 +44,6 @@ cream.jcr.workspace=default
 ## Testing
 %test.cream.jcr.mode=transient
 
-
 p. Annotate your model classes (see jcrom and Play validation for extended details)
 
 bc.. @JcrNode(mixinTypes = { "mix:created", "mix:lastModified", "mix:referenceable" })
