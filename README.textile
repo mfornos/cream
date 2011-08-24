@@ -76,7 +76,7 @@ public class Application extends Controller {
     ...
 }
 
-p. 2) Inject a session on the Controller with @Inject
+p. 2) Inject a session in the Controller with @Inject
 
 bc.. public class Application extends Controller {
 
