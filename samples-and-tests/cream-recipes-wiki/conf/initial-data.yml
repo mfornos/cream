@@ -1,0 +1,169 @@
+# Users
+
+User(demo):
+   name:     demo
+   path:     /users
+   email:    demo@demo.info
+   password: /gHOKn+6yPr67XyYKgTiKQ== #demo
+   admin:    false
+
+User(admin):
+   name:     admin
+   path:     /users
+   email:    admin@demo.info
+   password: /gHOKn+6yPr67XyYKgTiKQ== #demo
+   admin:    true
+   
+# Recipes
+   
+Recipe(momRecipe):
+   name: mom recipe
+   path: /recipes
+   title: My mother's recipe
+   description: > 
+                This is my mother's recipe. Everyone, German or not, loves it. It is easy to double the recipe as well. 
+                I often bring it to potlucks, and we also have it at home on special occasions. 
+                There are usually no leftovers, but if there are, they don't last long!
+   body:        |
+                <h2>Ingredients</h2>
+                <h3>Cake</h3>
+                <ul>
+                  <li>2 1/4 cups all-purpose flour</li>
+                  <li>2 teaspoons baking powder</li>
+                  <li>1/4 teaspoon baking soda</li>
+                  <li>1/2 teaspoon salt</li>
+                  <li>4 large egg whites</li>
+                  <li>3/4 cup water</li>
+                  <li>1/4 cup fresh orange juice</li>
+                  <li>1/2 cup butter or margarine</li>
+                  <li>1 1/2 cups granulated sugar</li>
+                  <li>1 tablespoon grated orange peel</li>
+                </ul>
+                <br/>
+                <h3>Orange Filling</h3>
+                <ul>
+                  <li>1/2 cup granulated sugar</li>
+                  <li>2 tablespoons cornstarch</li>
+                  <li>1 1/2 teaspoons grated orange peel</li>
+                  <li>1/4 teaspoon salt</li>
+                  <li>3/4 cup orange juice</li>
+                  <li>1/4 cup water</li>
+                  <li>2 large egg yolks</li>
+                  <li>2 tablespoons butter</li>
+                </ul>
+                <br/>
+                <h3>Orange Buttercream Frosting</h3>
+                <ul>
+                  <li>6 tablespoons butter</li>
+                  <li>4 1/2 cups sifted powdered sugar</li>
+                  <li>1 tablespoon grated orange peel</li>
+                  <li>Pinch of salt</li>
+                  <li>4 to 6 tablespoons orange juice</li>
+                </ul>
+                <br/>
+                <h2>Preparation</h2>
+                <ol>
+                  <li>For Cake: Preheat oven to 350°F (175°C). Grease and flour two 8-inch round cake
+                  pans; set aside.</li>
+                  <li>In a medium bowl, whisk together the flour, baking powder, baking soda and salt;
+                  set aside.</li>
+                  <li>Beat egg whites at high speed of an electric mixer until stiff peaks form; set
+                  aside.</li>
+                  <li>Combine water and orange juice in a glass measure; set aside.</li>
+                  <li>In a large mixing bowl using an electric mixer at medium speed, cream the butter
+                  and sugar until light and fluffy. Add orange peel and mix well. Add the flour mixture
+                  alternately with the water/juice mixture, beginning and ending with the flour
+                  mixture. Gently fold in the beaten egg whites until well blended. Pour batter evenly
+                  into the prepared cake pans.</li>
+                  <li>Bake for about 25 to 30 minutes or until tested done when pressed lightly in the
+                  center and cake springs back. Cool cakes in pans for 5 minutes on wire rack, then
+                  remove from pans.</li>
+                  <li>When completely cool, spread with Orange Filling between layers and frost top and
+                  sides with Orange Buttercream Frosting.</li>
+                  <li>For Orange Filling: Combine sugar, cornstarch, orange rind and salt in heavy
+                  saucepan. Gradually blend in orange juice, water and beaten egg yolks. Cook over
+                  medium heat, stirring constantly until mixture thickens. Cook for three minutes.
+                  Remove from heat and stir in butter. Cool before spreading between layers.</li>
+                  <li>For Orange Buttercream Frosting: In small deep bowl, cream butter, powdered
+                  sugar, orange rind, salt and enough orange juice until desired spreading consistency.
+                  Spread onto the sides and top of cake.</li>
+                </ol>
+                <p>Makes 10 to 12 servings.</p>
+   accessLevel: PUBLIC
+   author: demo
+   
+Recipe(orangeCake):
+   name: orange cake
+   path: /recipes
+   title: Spectacular orange cake
+   description: >
+                An orange layer cake filled with a luscious orange curd and frosted with a fluffy orange buttercream frosting.
+                You'll be put on a pedestal when you serve this spectacular cake!
+   body:        |
+                <h2>Ingredients</h2>
+                <h3>Cake</h3>
+                <ul>
+                  <li>2 1/4 cups all-purpose flour</li>
+                  <li>2 teaspoons baking powder</li>
+                  <li>1/4 teaspoon baking soda</li>
+                  <li>1/2 teaspoon salt</li>
+                  <li>4 large egg whites</li>
+                  <li>3/4 cup water</li>
+                  <li>1/4 cup fresh orange juice</li>
+                  <li>1/2 cup butter or margarine</li>
+                  <li>1 1/2 cups granulated sugar</li>
+                  <li>1 tablespoon grated orange peel</li>
+                </ul>
+                <br/>
+                <h3>Orange Filling</h3>
+                <ul>
+                  <li>1/2 cup granulated sugar</li>
+                  <li>2 tablespoons cornstarch</li>
+                  <li>1 1/2 teaspoons grated orange peel</li>
+                  <li>1/4 teaspoon salt</li>
+                  <li>3/4 cup orange juice</li>
+                  <li>1/4 cup water</li>
+                  <li>2 large egg yolks</li>
+                  <li>2 tablespoons butter</li>
+                </ul>
+                <br/>
+                <h3>Orange Buttercream Frosting</h3>
+                <ul>
+                  <li>6 tablespoons butter</li>
+                  <li>4 1/2 cups sifted powdered sugar</li>
+                  <li>1 tablespoon grated orange peel</li>
+                  <li>Pinch of salt</li>
+                  <li>4 to 6 tablespoons orange juice</li>
+                </ul>
+                <br/>
+                <h2>Preparation</h2>
+                <ol>
+                  <li>For Cake: Preheat oven to 350°F (175°C). Grease and flour two 8-inch round cake
+                  pans; set aside.</li>
+                  <li>In a medium bowl, whisk together the flour, baking powder, baking soda and salt;
+                  set aside.</li>
+                  <li>Beat egg whites at high speed of an electric mixer until stiff peaks form; set
+                  aside.</li>
+                  <li>Combine water and orange juice in a glass measure; set aside.</li>
+                  <li>In a large mixing bowl using an electric mixer at medium speed, cream the butter
+                  and sugar until light and fluffy. Add orange peel and mix well. Add the flour mixture
+                  alternately with the water/juice mixture, beginning and ending with the flour
+                  mixture. Gently fold in the beaten egg whites until well blended. Pour batter evenly
+                  into the prepared cake pans.</li>
+                  <li>Bake for about 25 to 30 minutes or until tested done when pressed lightly in the
+                  center and cake springs back. Cool cakes in pans for 5 minutes on wire rack, then
+                  remove from pans.</li>
+                  <li>When completely cool, spread with Orange Filling between layers and frost top and
+                  sides with Orange Buttercream Frosting.</li>
+                  <li>For Orange Filling: Combine sugar, cornstarch, orange rind and salt in heavy
+                  saucepan. Gradually blend in orange juice, water and beaten egg yolks. Cook over
+                  medium heat, stirring constantly until mixture thickens. Cook for three minutes.
+                  Remove from heat and stir in butter. Cool before spreading between layers.</li>
+                  <li>For Orange Buttercream Frosting: In small deep bowl, cream butter, powdered
+                  sugar, orange rind, salt and enough orange juice until desired spreading consistency.
+                  Spread onto the sides and top of cake.</li>
+                </ol>
+                <p>Makes 10 to 12 servings.</p>
+   accessLevel: PRIVATE
+   author: admin  
+    

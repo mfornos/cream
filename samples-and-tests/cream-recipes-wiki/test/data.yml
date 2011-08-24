@@ -1,4 +1,4 @@
-# Users
+# Test data
 
 # User(bob):
 #   name: bob
@@ -6,6 +6,3 @@
 #   password: secret
 #   path: /users
 
-# Recipes
-
-#path /recipes
