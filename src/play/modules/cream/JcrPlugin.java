@@ -65,7 +65,7 @@ public class JcrPlugin extends PlayPlugin {
                     && params.get(idKey)[0].trim().length() > 0) {
                 String id = params.get(idKey)[0];
                 try {
-                    Model o = JcrPersistence.loadByUUID(clazz, id);
+                    Model o = (Model) JcrPersistence.loadByUUID(clazz, id);
                     if (o != null) {
                         return Model.edit(o, name, params, annotations);
                     }
