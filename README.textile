@@ -48,7 +48,7 @@ cream.jcr.workspace=default
 ## Testing
 %test.cream.jcr.mode=transient
 
-p. Annotate your model classes and extend play.modules.cream.Model (not required but convenient). See jcrom and Play validation for extended details.
+p. Annotate your model classes and extend play.modules.cream.Model (not required but convenient). See <a href="http://code.google.com/p/jcrom/">jcrom</a> and <a href="http://www.playframework.org/documentation/1.2.2/home">Play</a> validation for extended details.
 
 bc.. @JcrNode(mixinTypes = { "mix:created", "mix:lastModified", "mix:referenceable" })
 public class User extends Model {
@@ -150,9 +150,9 @@ public class Users extends CRUD {
 
 p. You can use Fixtures normally for your tests and initial data loading.
 
-h2. <a href="sch">Full Text Search</a>
+h2. <a name="sch">Full Text Search</a>
 
-Jackrabbit is able to index binary content and text, of course. http://jackrabbit.apache.org/jackrabbit-text-extractors.html
+Jackrabbit is able to index binary content and text, of course. <a href="http://jackrabbit.apache.org/jackrabbit-text-extractors.html">Jackrabbit text extractors</a>
 
 Full text search is achieved by the means of contains clause:
 
@@ -190,7 +190,7 @@ bc..  // XXX see
                 Logger.error(e.getMessage(), e);
             }
 
-p. For a pragmatic reference of SQL-2 take a look at the official Jackrabbit tests: http://svn.apache.org/viewvc/jackrabbit/trunk/jackrabbit-spi-commons/src/test/resources/org/apache/jackrabbit/spi/commons/query/sql2/test.sql2.txt?view=markup
+p. For a pragmatic reference of SQL-2 take a look at the official Jackrabbit tests: <a href="http://svn.apache.org/viewvc/jackrabbit/trunk/jackrabbit-spi-commons/src/test/resources/org/apache/jackrabbit/spi/commons/query/sql2/test.sql2.txt?view=markup">Jackrabbit SQL-2 tests</a>
 
 p. Have fun! // and more to come...
 
