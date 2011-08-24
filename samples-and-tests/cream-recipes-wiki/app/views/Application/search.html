@@ -1,0 +1,18 @@
+#{extends 'main.html' /}
+#{set title:'Search results' /}
+
+<div id="search-results">
+#{if recipes}
+	<div id="recipes">
+	#{list items:recipes, as:'recipe' }
+		<div class="recipe">
+			<h1><a href="@{Application.show(recipe.uuid)}" class="title">${recipe.title}</a></h1>
+			${recipe.description.raw()}
+		</div>
+	#{/list}
+	</div>
+#{/if}
+#{else}
+	No recipes found.
+#{/else}
+</div>

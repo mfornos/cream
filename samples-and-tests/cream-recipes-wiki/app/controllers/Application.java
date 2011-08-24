@@ -1,19 +1,31 @@
 package controllers;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.List;
+
+import javax.jcr.RepositoryException;
+import javax.jcr.Value;
+import javax.jcr.query.Query;
+import javax.jcr.query.QueryManager;
+import javax.jcr.query.QueryResult;
+import javax.jcr.query.Row;
+import javax.jcr.query.RowIterator;
 
 import models.Recipe;
 import models.Recipe.AccessLevel;
 import models.User;
 
+import org.apache.commons.lang.StringUtils;
 import org.jcrom.JcrFile;
 
+import play.Logger;
 import play.Play;
 import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.libs.MimeTypes;
+import play.modules.cream.JcrPersistence;
 import play.modules.cream.JcrQuery;
 import play.modules.cream.annotations.JcrSession;
 import play.mvc.Before;
@@ -116,6 +128,38 @@ public class Application extends Controller {
         flash.success("You've been logged out");
         session.clear();
         index(1);
+    }
+
+    public static void search(String search) {
+        // Naive sanitize
+        search = search.replaceAll("[^\\w s]", "");
+
+        List<Recipe> recipes = new ArrayList<Recipe>();
+        if (StringUtils.isNotBlank(search)) {
+            // XXX see
+            // http://jackrabbit.510166.n4.nabble.com/Use-of-excerpt-with-SQL2-td3249018.html
+            // waiting for excerpt support with SQL-2
+            try {
+                QueryManager qm = JcrPersistence.getQueryManager();
+                @SuppressWarnings("deprecation")
+                Query q = qm.createQuery(
+                        "select excerpt(.) from nt:unstructured where jcr:path like '/recipes/%' and contains(., '"
+                                + search + "') order by jcr:score desc", Query.SQL);
+                QueryResult result = q.execute();
+                for (RowIterator it = result.getRows(); it.hasNext();) {
+                    Row r = it.nextRow();
+                    Value excerpt = r.getValue("rep:excerpt(.)");
+                    Recipe recipe = JcrPersistence.fromNode(Recipe.class, r.getNode());
+                    recipe.description = excerpt.getString().replaceAll("&lt;.*?&gt;", "");
+                    recipes.add(recipe);
+                }
+
+            } catch (RepositoryException e) {
+                Logger.error(e.getMessage(), e);
+            }
+        }
+
+        render(recipes, search);
     }
 
     public static void show(String id) {

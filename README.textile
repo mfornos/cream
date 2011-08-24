@@ -10,6 +10,7 @@ h2. <a name="fts">Features</a>
 * Content version management
 
 * Full text search
+** Indexing PDF, MS Word, Excel, PowerPoint, OpenOffice, RTF, HTML and XML
 
 * play.db.Model support
 
@@ -19,11 +20,15 @@ h2. <a name="fts">Features</a>
 
 h2. <a name="usg">Usage</a>
 
-Declare the proper dependency in conf/dependencies.yml
+Install locally this module
+
+bc.. $ play install cream-{version}
+
+p. Declare the proper dependency in conf/dependencies.yml
 
 bc.. require:
     - play
-    - play -> cream 0.1
+    - play -> cream {version}
     
 p. and let Play download and install the dependencies 
 
@@ -89,7 +94,7 @@ bc.. public class Application extends Controller {
 p. 3) Do it manually
 
 bc.. public void someMethod() {
-    Session session = JcrRepositoryHelper.openSession();
+    Session session = JcrPlugin.getCurrentSession();
     try {
         ...
     } finally {
@@ -146,5 +151,47 @@ public class Users extends CRUD {
 
 p. You can use Fixtures normally for your tests and initial data loading.
 
-p. // and more to come...
+h2. <a href="sch">Full Text Search</a>
+
+Jackrabbit is able to index binary content and text, of course. http://jackrabbit.apache.org/jackrabbit-text-extractors.html
+
+Full text search is achieved by the means of the contains clause:
+
+bc.. # 6.7.19 FullTextSearch (p 113)
+select * from test where contains(name, 'hello -world')
+select * from test where contains(name, $x)
+select * from test as t where contains(t.*, 'hello -world')
+select * from test as t where contains([t].name, 'hello -world')
+
+p. Score:
+
+bc.. # 6.7.31 FullTextSearchScore (p 122)
+select * from test where score()>4
+select * from test as x where score(x)<1
+
+p. Result excerpts. Still not supported in Jackrabbit 2. However you can use the old syntax, for example:
+
+bc..  // XXX see
+            // http://jackrabbit.510166.n4.nabble.com/Use-of-excerpt-with-SQL2-td3249018.html
+            // waiting for excerpt support with SQL-2
+            try {
+                QueryManager qm = JcrPersistence.getQueryManager();
+                @SuppressWarnings("deprecation")
+                Query q = qm.createQuery(
+                        "select excerpt(.) from nt:unstructured where jcr:path like '/mypath/%' and contains(., '"
+                                + search + "') order by jcr:score desc", Query.SQL);
+                QueryResult result = q.execute();
+                for (RowIterator it = result.getRows(); it.hasNext();) {
+                    Row r = it.nextRow();
+                    Value excerpt = r.getValue("rep:excerpt(.)");
+                    ...
+                }
+
+            } catch (RepositoryException e) {
+                Logger.error(e.getMessage(), e);
+            }
+
+p. For a pragmatic reference of SQL-2 take a look at the official Jackrabbit tests: http://svn.apache.org/viewvc/jackrabbit/trunk/jackrabbit-spi-commons/src/test/resources/org/apache/jackrabbit/spi/commons/query/sql2/test.sql2.txt?view=markup
+
+p. Have fun! // and more to come...
 

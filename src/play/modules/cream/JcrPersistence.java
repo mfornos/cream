@@ -27,7 +27,7 @@ import play.exceptions.UnexpectedException;
 import play.modules.cream.JcrMetadata.MD;
 import play.modules.cream.helpers.NullAwareBeanUtilsBean;
 
-// TODO extract JcrVersionManager, JcrQueryManager or something similar
+// TODO Refactor: extract JcrVersionManager, JcrQueryManager or something similar
 // TODO replace some strategic exceptions with return null
 public class JcrPersistence {
 
@@ -157,6 +157,12 @@ public class JcrPersistence {
 
     public static String getPath(Object arg0) throws JcrMappingException {
         return jcrom.getPath(arg0);
+    }
+
+    public static QueryManager getQueryManager() throws RepositoryException {
+        Workspace workspace = JcrPlugin.getCurrentSession().getWorkspace();
+        QueryManager queryMan = workspace.getQueryManager();
+        return queryMan;
     }
 
     public static long getSize(String rootPath) {
@@ -551,10 +557,10 @@ public class JcrPersistence {
         return jcrom.updateNode(node, entity, arg2, arg3);
     }
 
+    // TODO Sanitize input or implement some sort of PreparedStatement
     protected static <T> JcrQuery<T> executeQuery(Class<T> clazz, String queryString, Object... params)
             throws RepositoryException {
-        Workspace workspace = JcrPlugin.getCurrentSession().getWorkspace();
-        QueryManager queryMan = workspace.getQueryManager();
+        QueryManager queryMan = getQueryManager();
         Query query = queryMan.createQuery(String.format(queryString, params), Query.JCR_SQL2);
         QueryResult queryResult = query.execute();
         NodeIterator nodeItor = queryResult.getNodes();

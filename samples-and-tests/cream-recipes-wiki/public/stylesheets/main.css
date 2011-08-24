@@ -49,6 +49,13 @@ a:hover {
 	border-bottom: 1px solid #888888;
 }
 
+#topbar #search {
+	position: absolute;
+	clear: none;
+	left: 200px;
+	top: 10px;
+}
+
 #topbar .box {
 	float: right;
 	padding-right: 50px;
@@ -405,6 +412,14 @@ a:hover {
 #recipe .body h2, #recipe .body h1, #recipe .body h3  {
 	margin-bottom: 10px;
 	color: #585535;
+}
+
+#search-results #recipes .recipe {
+	padding: 10px;
+}
+
+#search-results #recipes .recipe strong {
+	background-color: #FFFFCC;
 }
 
 #user {
