@@ -22,8 +22,6 @@ import javax.jcr.Repository;
 
 import org.apache.jackrabbit.rmi.client.ClientAdapterFactory;
 import org.apache.jackrabbit.rmi.client.ClientRepositoryFactory;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * @author <a href="mailto:topping@codehaus.org">Brian Topping</a>
@@ -32,9 +30,6 @@ import org.slf4j.LoggerFactory;
  */
 
 public class RmiRepositoryFactory {
-    @SuppressWarnings("unused")
-    private static final Logger log = LoggerFactory.getLogger(RmiRepositoryFactory.class);
-
     static Repository getRmiRepository(String url) throws MalformedURLException, NotBoundException, RemoteException {
         ClientRepositoryFactory factory = new ClientRepositoryFactory(new ClientAdapterFactory());
         return factory.getRepository(url);
