@@ -27,7 +27,6 @@ bc.. $ play install cream-{version}
 p. Declare the proper dependency in conf/dependencies.yml
 
 bc.. require:
-    - play
     - play -> cream {version}
     
 p. and let Play download and install the dependencies 
