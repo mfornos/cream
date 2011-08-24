@@ -171,24 +171,24 @@ select * from test as x where score(x)<1
 p. Result excerpts. Still not supported in Jackrabbit 2. However you can use the old syntax, for example:
 
 bc..  // XXX see
-            // http://jackrabbit.510166.n4.nabble.com/Use-of-excerpt-with-SQL2-td3249018.html
-            // waiting for excerpt support with SQL-2
-            try {
-                QueryManager qm = JcrPersistence.getQueryManager();
-                @SuppressWarnings("deprecation")
-                Query q = qm.createQuery(
-                        "select excerpt(.) from nt:unstructured where jcr:path like '/mypath/%' and contains(., '"
-                                + search + "') order by jcr:score desc", Query.SQL);
-                QueryResult result = q.execute();
-                for (RowIterator it = result.getRows(); it.hasNext();) {
-                    Row r = it.nextRow();
-                    Value excerpt = r.getValue("rep:excerpt(.)");
-                    ...
-                }
+    // http://jackrabbit.510166.n4.nabble.com/Use-of-excerpt-with-SQL2-td3249018.html
+    // waiting for excerpt support with SQL-2
+    try {
+        QueryManager qm = JcrPersistence.getQueryManager();
+        @SuppressWarnings("deprecation")
+        Query q = qm.createQuery(
+                 "select excerpt(.) from nt:unstructured where jcr:path like '/mypath/%' and contains(., '"
+                        + search + "') order by jcr:score desc", Query.SQL);
+        QueryResult result = q.execute();
+        for (RowIterator it = result.getRows(); it.hasNext();) {
+            Row r = it.nextRow();
+            Value excerpt = r.getValue("rep:excerpt(.)");
+            ...
+        }
 
-            } catch (RepositoryException e) {
-                Logger.error(e.getMessage(), e);
-            }
+    } catch (RepositoryException e) {
+         Logger.error(e.getMessage(), e);
+    }
 
 p. For a pragmatic reference of SQL-2 take a look at the official Jackrabbit tests: <a href="http://svn.apache.org/viewvc/jackrabbit/trunk/jackrabbit-spi-commons/src/test/resources/org/apache/jackrabbit/spi/commons/query/sql2/test.sql2.txt?view=markup">Jackrabbit SQL-2 tests</a>
 
