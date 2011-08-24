@@ -1,6 +1,6 @@
 h1. Cream module
 
-A play module that integrates seamesly Apache Jackrabbit (JCR 2.0) with Play framework.
+A module that integrates seamesly Apache Jackrabbit (JCR 2.0) with Play framework.
 
 h2. <a>Features</a>
 
