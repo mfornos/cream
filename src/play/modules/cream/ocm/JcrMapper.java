@@ -1,4 +1,4 @@
-package play.modules.cream;
+package play.modules.cream.ocm;
 
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -11,25 +11,27 @@ import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.Workspace;
 import javax.jcr.nodetype.NodeType;
+import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
-import javax.jcr.version.Version;
-import javax.jcr.version.VersionHistory;
-import javax.jcr.version.VersionIterator;
 import javax.jcr.version.VersionManager;
 
+import org.apache.derby.impl.sql.compile.GetCurrentConnectionNode;
 import org.jcrom.JcrMappingException;
 import org.jcrom.Jcrom;
 
 import play.Play;
 import play.exceptions.UnexpectedException;
+import play.modules.cream.JcrMetadata;
 import play.modules.cream.JcrMetadata.MD;
+import play.modules.cream.JcrPlugin;
+import play.modules.cream.JcrQuery;
+import play.modules.cream.Model;
 import play.modules.cream.helpers.NullAwareBeanUtilsBean;
 
-// TODO Refactor: extract JcrVersionManager, JcrQueryManager or something similar
 // TODO replace some strategic exceptions with return null
-public class JcrPersistence {
+public class JcrMapper {
 
     // Jcrom is thread-safe
     public static Jcrom jcrom;
@@ -160,9 +162,11 @@ public class JcrPersistence {
     }
 
     public static QueryManager getQueryManager() throws RepositoryException {
-        Workspace workspace = JcrPlugin.getCurrentSession().getWorkspace();
-        QueryManager queryMan = workspace.getQueryManager();
-        return queryMan;
+        return getSession().getWorkspace().getQueryManager();
+    }
+
+    public static ObservationManager getObservationManager() throws RepositoryException {
+        return getSession().getWorkspace().getObservationManager();
     }
 
     public static long getSize(String rootPath) {
@@ -171,101 +175,6 @@ public class JcrPersistence {
             return nodeIterator.getSize();
         } catch (RepositoryException e) {
             throw new JcrMappingException("Could not get list size", e);
-        }
-    }
-
-    public static <T> T getVersion(Class<T> clazz, String path, String versionName) {
-        return getVersion(clazz, path, versionName, "*", -1);
-    }
-
-    public static <T> T getVersion(Class<T> clazz, String path, String versionName, String childNodeFilter, int maxDepth) {
-        try {
-            return getVersion(clazz, getSession().getRootNode().getNode(relativePath(path)), versionName,
-                    childNodeFilter, maxDepth);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version", e);
-        }
-    }
-
-    public static <T> T getVersionByUUID(Class<T> clazz, String uuid, String versionName) {
-        return getVersionByUUID(clazz, uuid, versionName, "*", -1);
-    }
-
-    public static <T> T getVersionByUUID(Class<T> clazz, String uuid, String versionName, String childNodeFilter,
-            int maxDepth) {
-        try {
-            return getVersion(clazz, getSession().getNodeByIdentifier(uuid), versionName, childNodeFilter, maxDepth);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version", e);
-        }
-    }
-
-    public static <T> List<T> getVersionList(Class<?> clazz, String path) {
-        try {
-            return getVersionList(clazz, getSession().getRootNode().getNode(relativePath(path)), "*", -1);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version list", e);
-        }
-    }
-
-    public static <T> List<T> getVersionList(Class<?> clazz, String path, String childNameFilter, int maxDepth) {
-        try {
-            return getVersionList(clazz, getSession().getRootNode().getNode(relativePath(path)), childNameFilter,
-                    maxDepth);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version list", e);
-        }
-    }
-
-    public static <T> List<T> getVersionList(Class<?> clazz, String path, String childNameFilter, int maxDepth,
-            long startIndex, long resultSize) {
-        try {
-            return getVersionList(clazz, getSession().getRootNode().getNode(relativePath(path)), childNameFilter,
-                    maxDepth, startIndex, resultSize);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version list", e);
-        }
-    }
-
-    public static <T> List<T> getVersionListByUUID(Class<?> clazz, String uuid) {
-        try {
-            return getVersionList(clazz, getSession().getNodeByIdentifier(uuid), "*", -1);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version list", e);
-        }
-    }
-
-    public static <T> List<T> getVersionListByUUID(Class<?> clazz, String uuid, String childNameFilter, int maxDepth) {
-        try {
-            return getVersionList(clazz, getSession().getNodeByIdentifier(uuid), childNameFilter, maxDepth);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version list", e);
-        }
-    }
-
-    public static <T> List<T> getVersionListByUUID(Class<?> clazz, String uuid, String childNameFilter, int maxDepth,
-            long startIndex, long resultSize) {
-        try {
-            return getVersionList(clazz, getSession().getNodeByIdentifier(uuid), childNameFilter, maxDepth, startIndex,
-                    resultSize);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version list", e);
-        }
-    }
-
-    public static long getVersionSize(String path) {
-        try {
-            return getVersionSize(getSession().getRootNode().getNode(relativePath(path)));
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version history size", e);
-        }
-    }
-
-    public static long getVersionSizeByUUID(String uuid) {
-        try {
-            return getVersionSize(getSession().getNodeByIdentifier(uuid));
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version history size", e);
         }
     }
 
@@ -423,48 +332,8 @@ public class JcrPersistence {
         }
     }
 
-    public static void removeVersion(String path, String versionName) {
-        try {
-            removeVersion(getSession().getRootNode().getNode(relativePath(path)), versionName);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not remove version", e);
-        }
-    }
-
-    public static void removeVersionByUUID(String uuid, String versionName) {
-        try {
-            removeVersion(getSession().getNodeByIdentifier(uuid), versionName);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not remove version", e);
-        }
-    }
-
-    public static void restoreVersion(String path, String versionName) {
-        restoreVersion(path, versionName, true);
-    }
-
-    public static void restoreVersion(String path, String versionName, boolean removeExisting) {
-        try {
-            restoreVersion(getSession().getRootNode().getNode(relativePath(path)), versionName, removeExisting);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not restore version", e);
-        }
-    }
-
-    public static void restoreVersionByUUID(String uuid, String versionName) {
-        restoreVersionByUUID(uuid, versionName, true);
-    }
-
-    public static void restoreVersionByUUID(String uuid, String versionName, boolean removeExisting) {
-        try {
-            restoreVersion(getSession().getNodeByIdentifier(uuid), versionName, removeExisting);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not restore version", e);
-        }
-    }
-
-    public static void setBaseVersionInfo(Object arg0, String arg1, Calendar arg2) throws JcrMappingException {
-        jcrom.setBaseVersionInfo(arg0, arg1, arg2);
+    public static void setBaseVersionInfo(Object object, String name, Calendar created) {
+        jcrom.setBaseVersionInfo(object, name, created);
     }
 
     /**
@@ -575,78 +444,6 @@ public class JcrPersistence {
         return play.modules.cream.JcrPlugin.getCurrentSession();
     }
 
-    protected static <T> T getVersion(Class<T> clazz, Node node, String versionName, String childNodeFilter,
-            int maxDepth) {
-        try {
-            VersionManager versionManager = getSession().getWorkspace().getVersionManager();
-            VersionHistory versionHistory = versionManager.getVersionHistory(node.getPath());
-            Version version = versionHistory.getVersion(versionName);
-            return (T) jcrom.fromNode(clazz, version.getNodes().nextNode(), childNodeFilter, maxDepth);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version", e);
-        }
-    }
-
-    protected static <T> List<T> getVersionList(Class<?> clazz, Node node, String childNameFilter, int maxDepth) {
-        try {
-            List<T> versionList = new ArrayList<T>();
-            VersionManager versionManager = getSession().getWorkspace().getVersionManager();
-            VersionHistory versionHistory = versionManager.getVersionHistory(node.getPath());
-            VersionIterator versionIterator = versionHistory.getAllVersions();
-            versionIterator.skip(1);
-            while (versionIterator.hasNext()) {
-                Version version = versionIterator.nextVersion();
-                NodeIterator nodeIterator = version.getNodes();
-                while (nodeIterator.hasNext()) {
-                    T entityVersion = (T) jcrom.fromNode(clazz, nodeIterator.nextNode(), childNameFilter, maxDepth);
-                    Version baseVersion = versionManager.getBaseVersion(node.getPath());
-                    jcrom.setBaseVersionInfo(entityVersion, baseVersion.getName(), baseVersion.getCreated());
-                    versionList.add(entityVersion);
-                }
-            }
-            return versionList;
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version list", e);
-        }
-    }
-
-    protected static <T> List<T> getVersionList(Class<?> clazz, Node node, String childNameFilter, int maxDepth,
-            long startIndex, long resultSize) {
-        try {
-            List<T> versionList = new ArrayList<T>();
-            VersionManager versionManager = getSession().getWorkspace().getVersionManager();
-            VersionHistory versionHistory = versionManager.getVersionHistory(node.getPath());
-            VersionIterator versionIterator = versionHistory.getAllVersions();
-            versionIterator.skip(1 + startIndex);
-
-            long counter = 0;
-            while (versionIterator.hasNext()) {
-                if (counter == resultSize) {
-                    break;
-                }
-                Version version = versionIterator.nextVersion();
-                NodeIterator nodeIterator = version.getNodes();
-                while (nodeIterator.hasNext()) {
-                    versionList.add((T) jcrom.fromNode(clazz, nodeIterator.nextNode(), childNameFilter, maxDepth));
-                }
-                counter++;
-            }
-            return versionList;
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version list", e);
-        }
-    }
-
-    protected static long getVersionSize(Node node) {
-        try {
-            VersionManager versionManager = getSession().getWorkspace().getVersionManager();
-            VersionHistory versionHistory = versionManager.getVersionHistory(node.getPath());
-            return versionHistory.getAllVersions().getSize() - 1;
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not get version history size", e);
-        }
-    }
-
     protected static boolean hasMixinType(Node node, String mixinType) throws RepositoryException {
         for (NodeType nodeType : node.getMixinNodeTypes()) {
             if (nodeType.getName().equals(mixinType)) {
@@ -661,25 +458,6 @@ public class JcrPersistence {
             return absolutePath.substring(1);
         } else {
             return absolutePath;
-        }
-    }
-
-    protected static void removeVersion(Node node, String versionName) {
-        try {
-            VersionManager versionManager = getSession().getWorkspace().getVersionManager();
-            versionManager.getVersionHistory(node.getPath()).removeVersion(versionName);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not remove version", e);
-        }
-    }
-
-    protected static void restoreVersion(Node node, String versionName, boolean removeExisting) {
-        try {
-            VersionManager versionManager = getSession().getWorkspace().getVersionManager();
-            versionManager.checkout(node.getPath());
-            versionManager.restore(node.getPath(), versionName, removeExisting);
-        } catch (RepositoryException e) {
-            throw new JcrMappingException("Could not restore version", e);
         }
     }
 
@@ -735,6 +513,10 @@ public class JcrPersistence {
         } catch (RepositoryException e) {
             throw new JcrMappingException("Could not perform check-in", e);
         }
+    }
+
+    private JcrMapper() {
+
     }
 
 }

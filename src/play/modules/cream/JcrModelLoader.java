@@ -31,6 +31,7 @@ import play.db.Model;
 import play.db.Model.Factory;
 import play.db.Model.Property;
 import play.exceptions.UnexpectedException;
+import play.modules.cream.ocm.JcrMapper;
 
 public class JcrModelLoader implements Factory {
     private final Class<? extends Model> clazz;
@@ -46,7 +47,7 @@ public class JcrModelLoader implements Factory {
 
         JcrQuery<? extends Model> query;
         try {
-            query = JcrPersistence.find(clazz.getName(), q.toString(), JcrPersistence.getDefaultPath(clazz));
+            query = JcrMapper.find(clazz.getName(), q.toString(), JcrMapper.getDefaultPath(clazz));
         } catch (RepositoryException e) {
             throw new UnexpectedException(e);
         }
@@ -57,9 +58,9 @@ public class JcrModelLoader implements Factory {
     @Override
     public void deleteAll() {
         try {
-            Session session = JcrPersistence.getSession();
+            Session session = JcrPlugin.getCurrentSession();
             try {
-                Node node = session.getNode(JcrPersistence.getDefaultPath(clazz));
+                Node node = session.getNode(JcrMapper.getDefaultPath(clazz));
                 if (node != null) {
                     node.remove();
                 }
@@ -82,7 +83,7 @@ public class JcrModelLoader implements Factory {
 
         JcrQuery<? extends Model> query;
         try {
-            query = JcrPersistence.find(clazz.getName(), q.toString(), JcrPersistence.getDefaultPath(clazz));
+            query = JcrMapper.find(clazz.getName(), q.toString(), JcrMapper.getDefaultPath(clazz));
         } catch (RepositoryException e) {
             throw new UnexpectedException(e);
         }
@@ -96,7 +97,7 @@ public class JcrModelLoader implements Factory {
         if (id == null) {
             return null;
         }
-        return JcrPersistence.loadByUUID(clazz, (String) id);
+        return JcrMapper.loadByUUID(clazz, (String) id);
     }
 
     public String keyName() {
@@ -158,8 +159,8 @@ public class JcrModelLoader implements Factory {
 
                     @SuppressWarnings("unchecked")
                     public List<Object> list() {
-                        String path = JcrPersistence.getDefaultPath(fieldType);
-                        return (List<Object>) JcrPersistence.findAll(fieldType, path).fetch();
+                        String path = JcrMapper.getDefaultPath(fieldType);
+                        return (List<Object>) JcrMapper.findAll(fieldType, path).fetch();
                     }
                 };
             }
@@ -172,8 +173,8 @@ public class JcrModelLoader implements Factory {
 
                     @SuppressWarnings("unchecked")
                     public List<Object> list() {
-                        String path = JcrPersistence.getDefaultPath(field.getType());
-                        return (List<Object>) JcrPersistence.findAll(field.getType(), path).fetch();
+                        String path = JcrMapper.getDefaultPath(field.getType());
+                        return (List<Object>) JcrMapper.findAll(field.getType(), path).fetch();
                     }
                 };
             }

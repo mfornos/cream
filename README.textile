@@ -7,10 +7,12 @@ h2. <a name="fts">Features</a>
 * OCM
 ** Uses jcrom as the underlying object-to-content mapper
 
-* Content version management
-
 * Full text search
 ** Indexing PDF, MS Word, Excel, PowerPoint, OpenOffice, RTF, HTML and XML
+
+* Content versioning
+
+* Repository observers
 
 * play.db.Model support
 
@@ -174,7 +176,7 @@ bc.. // XXX see
 // http://jackrabbit.510166.n4.nabble.com/Use-of-excerpt-with-SQL2-td3249018.html
 // waiting for excerpt support with SQL-2
 try {
-    QueryManager qm = JcrPersistence.getQueryManager();
+    QueryManager qm = JcrMapper.getQueryManager();
     @SuppressWarnings("deprecation")
     Query q = qm.createQuery(
              "select excerpt(.) from nt:unstructured where jcr:path like '/mypath/%' and contains(., '"
@@ -190,6 +192,22 @@ try {
 }
 
 p. For a pragmatic reference of SQL-2 take a look at the official Jackrabbit tests: <a href="http://svn.apache.org/viewvc/jackrabbit/trunk/jackrabbit-spi-commons/src/test/resources/org/apache/jackrabbit/spi/commons/query/sql2/test.sql2.txt?view=markup">Jackrabbit SQL-2 tests</a>
+
+h2. <a name="obs">Repository Observers</a>
+
+To observe repository events create a class that implements javax.jcr.EventListener and annotate it with @OnJcrEvent. Cream will automatically register it for the current session.
+
+bc.. @OnJcrEvent(eventTypes = Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_CHANGED, absPath = "/", isDeep = true)
+public class LoggingObserver implements EventListener {
+
+    @Override
+    public void onEvent(EventIterator events) {
+        while (events.hasNext()) {
+            Event event = events.nextEvent();
+            Logger.info("JcrEvent received: { %s }", event.toString());
+        }
+    }
+}
 
 p. Have fun! // and more to come...
 

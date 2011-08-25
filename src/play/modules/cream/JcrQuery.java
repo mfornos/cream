@@ -5,6 +5,8 @@ import java.util.List;
 
 import javax.jcr.NodeIterator;
 
+import play.modules.cream.ocm.JcrMapper;
+
 public class JcrQuery<T> {
 
     private final NodeIterator iterator;
@@ -21,7 +23,7 @@ public class JcrQuery<T> {
      * @return A list of entities
      */
     public List<T> fetch() {
-        return JcrPersistence.toList(entityClass, iterator, "*", -1);
+        return JcrMapper.toList(entityClass, iterator, "*", -1);
     }
 
     /**
@@ -38,7 +40,7 @@ public class JcrQuery<T> {
         int c = 0;
         List<T> list = new ArrayList<T>();
         while (iterator.hasNext() && c < max) {
-            list.add(JcrPersistence.fromNode(entityClass, iterator.nextNode()));
+            list.add(JcrMapper.fromNode(entityClass, iterator.nextNode()));
             c++;
         }
         return list;
@@ -78,7 +80,7 @@ public class JcrQuery<T> {
             int c = 0;
 
             while (iterator.hasNext() && c < length) {
-                list.add(JcrPersistence.fromNode(entityClass, iterator.nextNode()));
+                list.add(JcrMapper.fromNode(entityClass, iterator.nextNode()));
                 c++;
             }
         }
@@ -90,7 +92,7 @@ public class JcrQuery<T> {
     }
 
     public T first() {
-        return (iterator.hasNext()) ? JcrPersistence.fromNode(entityClass, iterator.nextNode()) : null;
+        return (iterator.hasNext()) ? JcrMapper.fromNode(entityClass, iterator.nextNode()) : null;
     }
 
     public long count() {

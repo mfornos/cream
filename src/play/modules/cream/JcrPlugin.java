@@ -25,11 +25,13 @@ import play.modules.cream.annotations.JcrSession;
 import play.modules.cream.annotations.NoJcrSession;
 import play.modules.cream.helpers.JcrRepositoryCreationHelper;
 import play.modules.cream.helpers.JcrRepositoryHelper;
+import play.modules.cream.ocm.JcrMapper;
 
 /**
  * Cream: JCR Plugin for Play! Framework
  * 
  */
+//TODO status
 public class JcrPlugin extends PlayPlugin {
 
     private static ThreadLocal<JcrSessionSource> sessionSource = new ThreadLocal<JcrSessionSource>();
@@ -65,7 +67,7 @@ public class JcrPlugin extends PlayPlugin {
                     && params.get(idKey)[0].trim().length() > 0) {
                 String id = params.get(idKey)[0];
                 try {
-                    Model o = (Model) JcrPersistence.loadByUUID(clazz, id);
+                    Model o = (Model) JcrMapper.loadByUUID(clazz, id);
                     if (o != null) {
                         return Model.edit(o, name, params, annotations);
                     }
@@ -133,6 +135,9 @@ public class JcrPlugin extends PlayPlugin {
         } else {
             currentSession = JcrRepositoryHelper.openSession();
         }
+
+        postEvent(JcrPlugin.class.getSimpleName() + ".JcrSessionCreated", currentSession);
+
         return currentSession;
     }
 
@@ -148,7 +153,7 @@ public class JcrPlugin extends PlayPlugin {
         JcrMetadata jcrMetadata = JcrMetadata.getInstance();
         jcrMetadata.intialize(jcrom);
 
-        JcrPersistence.jcrom = jcrom;
+        JcrMapper.jcrom = jcrom;
     }
 
     private void setUpJcrRepository() {

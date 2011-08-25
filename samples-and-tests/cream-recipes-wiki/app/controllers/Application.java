@@ -25,9 +25,9 @@ import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.libs.MimeTypes;
-import play.modules.cream.JcrPersistence;
 import play.modules.cream.JcrQuery;
 import play.modules.cream.annotations.JcrSession;
+import play.modules.cream.ocm.JcrMapper;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -140,7 +140,7 @@ public class Application extends Controller {
             // http://jackrabbit.510166.n4.nabble.com/Use-of-excerpt-with-SQL2-td3249018.html
             // waiting for excerpt support with SQL-2
             try {
-                QueryManager qm = JcrPersistence.getQueryManager();
+                QueryManager qm = JcrMapper.getQueryManager();
                 @SuppressWarnings("deprecation")
                 Query q = qm.createQuery(
                         "select excerpt(.) from nt:unstructured where jcr:path like '/recipes/%' and contains(., '"
@@ -149,7 +149,7 @@ public class Application extends Controller {
                 for (RowIterator it = result.getRows(); it.hasNext();) {
                     Row r = it.nextRow();
                     Value excerpt = r.getValue("rep:excerpt(.)");
-                    Recipe recipe = JcrPersistence.fromNode(Recipe.class, r.getNode());
+                    Recipe recipe = JcrMapper.fromNode(Recipe.class, r.getNode());
                     recipe.description = excerpt.getString().replaceAll("&lt;.*?&gt;", "");
                     recipes.add(recipe);
                 }

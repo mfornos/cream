@@ -20,35 +20,35 @@ public class JcrEnhancer extends Enhancer {
             // All
             CtMethod all = CtMethod
                     .make(String
-                            .format("public static play.modules.cream.JcrQuery all(String rootPath) { return  play.modules.cream.JcrPersistence.findAll(\"%s\", rootPath);	}",
+                            .format("public static play.modules.cream.JcrQuery all(String rootPath) { return  play.modules.cream.ocm.JcrMapper.findAll(\"%s\", rootPath);	}",
                                     entityName), ctClass);
             ctClass.addMethod(all);
 
             // FindAll
             CtMethod findAll = CtMethod
                     .make(String
-                            .format("public static java.util.List findAll(String rootPath) { return play.modules.cream.JcrPersistence.findAll(\"%s\", rootPath).fetch();}",
+                            .format("public static java.util.List findAll(String rootPath) { return play.modules.cream.ocm.JcrMapper.findAll(\"%s\", rootPath).fetch();}",
                                     entityName), ctClass);
             ctClass.addMethod(findAll);
 
             // ById
             CtMethod byId = CtMethod
                     .make(String
-                            .format("public static play.modules.cream.Model findById(Object id) { return play.modules.cream.JcrPersistence.loadByUUID(\"%s\", (String) id);}",
+                            .format("public static play.modules.cream.Model findById(Object id) { return play.modules.cream.ocm.JcrMapper.loadByUUID(\"%s\", (String) id);}",
                                     entityName), ctClass);
             ctClass.addMethod(byId);
 
             // Find
             CtMethod find = CtMethod
                     .make(String
-                            .format("public static play.modules.cream.JcrQuery find(String query, Object[] params) { return play.modules.cream.JcrPersistence.find(\"%s\", query, params);}",
+                            .format("public static play.modules.cream.JcrQuery find(String query, Object[] params) { return play.modules.cream.ocm.JcrMapper.find(\"%s\", query, params);}",
                                     entityName), ctClass);
             ctClass.addMethod(find);
 
             // Get
             CtMethod get = CtMethod
                     .make(String
-                            .format("public static play.modules.cream.Model get(String path) { return play.modules.cream.JcrPersistence.get(\"%s\", path);}",
+                            .format("public static play.modules.cream.Model get(String path) { return play.modules.cream.ocm.JcrMapper.get(\"%s\", path);}",
                                     entityName), ctClass);
             ctClass.addMethod(get);
 

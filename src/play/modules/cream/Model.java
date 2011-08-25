@@ -28,6 +28,7 @@ import play.Play;
 import play.data.binding.BeanWrapper;
 import play.data.validation.Validation;
 import play.exceptions.UnexpectedException;
+import play.modules.cream.ocm.JcrMapper;
 import play.utils.Utils;
 
 public abstract class Model implements play.db.Model {
@@ -210,7 +211,7 @@ public abstract class Model implements play.db.Model {
     public boolean checkedout;
 
     public void _delete() {
-        JcrPersistence.remove(this);
+        JcrMapper.remove(this);
     }
 
     @Override
@@ -220,14 +221,14 @@ public abstract class Model implements play.db.Model {
 
     public void _save() {
         if (path == null) {
-            path = JcrPersistence.getDefaultPath(this.getClass());
-            JcrPersistence.create(this);
+            path = JcrMapper.getDefaultPath(this.getClass());
+            JcrMapper.create(this);
         } else {
             // TODO support weak references by path?
             if (uuid == null) {
-                JcrPersistence.create(this);
+                JcrMapper.create(this);
             } else {
-                JcrPersistence.update(this);
+                JcrMapper.update(this);
             }
         }
     }
@@ -236,7 +237,7 @@ public abstract class Model implements play.db.Model {
      * store (ie insert) the entity.
      */
     public boolean create() {
-        JcrPersistence.create(this);
+        JcrMapper.create(this);
         return true;
     }
 
@@ -279,11 +280,11 @@ public abstract class Model implements play.db.Model {
     }
 
     public <T> T merge() {
-        return (T) JcrPersistence.merge(this);
+        return (T) JcrMapper.merge(this);
     }
 
     public <T> T merge(String childNodeFilter, int maxDepth) {
-        return (T) JcrPersistence.merge(this, childNodeFilter, maxDepth);
+        return (T) JcrMapper.merge(this, childNodeFilter, maxDepth);
     }
 
     /**
@@ -299,11 +300,11 @@ public abstract class Model implements play.db.Model {
     }
 
     public <T> T update() {
-        return (T) JcrPersistence.update(this);
+        return (T) JcrMapper.update(this);
     }
 
     public <T> T update(String childNodeFilter, int maxDepth) {
-        return (T) JcrPersistence.update(this, childNodeFilter, maxDepth);
+        return (T) JcrMapper.update(this, childNodeFilter, maxDepth);
     }
 
     public boolean validateAndCreate() {
