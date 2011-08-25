@@ -9,7 +9,6 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.Workspace;
 import javax.jcr.nodetype.NodeType;
 import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
@@ -17,7 +16,6 @@ import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
 import javax.jcr.version.VersionManager;
 
-import org.apache.derby.impl.sql.compile.GetCurrentConnectionNode;
 import org.jcrom.JcrMappingException;
 import org.jcrom.Jcrom;
 
@@ -25,7 +23,6 @@ import play.Play;
 import play.exceptions.UnexpectedException;
 import play.modules.cream.JcrMetadata;
 import play.modules.cream.JcrMetadata.MD;
-import play.modules.cream.JcrPlugin;
 import play.modules.cream.JcrQuery;
 import play.modules.cream.Model;
 import play.modules.cream.helpers.NullAwareBeanUtilsBean;
