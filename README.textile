@@ -112,10 +112,7 @@ public class MyController extends Controller {
     
     public static void create(@Valid MyEntity entity) {
        if (validation.hasErrors()) {
-            validation.keep();
-            params.flash();
-            flash.error("Please correct these errors !");
-            add(entity);
+            ...
        }
        
        entity.create();
@@ -126,13 +123,11 @@ public class MyController extends Controller {
     public static void index(Integer page) {
         
         JcrQuery result = MyEntity.all();
-        long nbMyEntity = result.count();
         List<MyEntity> entities = result.fetch(page, pageSize);
+        long totalNumOfEntities = result.count();
         
         
-        // Unsafe assignation, use RenderArgs instead :P
-        page = (page != null) ? Math.max(page, 1) : 1; 
-        render(nbMyEntity, entities, page);
+        ...
    }
    
    ...
