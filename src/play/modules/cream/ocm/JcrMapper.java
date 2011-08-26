@@ -23,8 +23,8 @@ import play.Play;
 import play.exceptions.UnexpectedException;
 import play.modules.cream.JcrMetadata;
 import play.modules.cream.JcrMetadata.MD;
-import play.modules.cream.JcrQuery;
 import play.modules.cream.Model;
+import play.modules.cream.helpers.JcrUtils;
 import play.modules.cream.helpers.NullAwareBeanUtilsBean;
 
 // TODO replace some strategic exceptions with return null
@@ -92,35 +92,60 @@ public class JcrMapper {
         }
     }
 
-    public static <T> JcrQuery<T> find(final String className, final String queryString, Object... params)
+    public static <T> JcrQueryResult<T> find(final String className, final String queryString, Object... params)
             throws RepositoryException {
         Class clazz = Play.classloader.getClassIgnoreCase(className);
         return executeQuery(clazz, queryString, params);
     }
 
-    public static <T> JcrQuery<T> findAll(Class<T> clazz, String rootPath) {
+    public static <T> JcrQueryResult<T> findAll(Class<T> clazz, String rootPath) {
         return findAll(clazz, rootPath, "*", -1);
     }
 
-    public static <T> JcrQuery<T> findAll(Class<T> clazz, String rootPath, String childNameFilter, int maxDepth) {
+    public static <T> JcrQueryResult<T> findAll(Class<T> clazz, String rootPath, String childNameFilter, int maxDepth) {
         try {
-            NodeIterator nodeIterator = getSession().getRootNode().getNode(relativePath(rootPath)).getNodes();
+            NodeIterator nodeIterator = getSession().getRootNode().getNode(JcrMapper.relativePath(rootPath)).getNodes();
             return toJcrQuery(clazz, nodeIterator);
         } catch (RepositoryException e) {
             throw new JcrMappingException("Could not find nodes", e);
         }
     }
 
-    public static <T> JcrQuery<T> findAll(String className, String rootPath) {
+    public static <T> JcrQueryResult<T> findAll(String className, String rootPath) {
         return findAll(Play.classloader.getClassIgnoreCase(className), rootPath);
+    }
+
+    public static <T> JcrQueryResult<T> findAll(String className) {
+        Class clazz = Play.classloader.getClassIgnoreCase(className);
+        return findAll(clazz, getDefaultPath(clazz));
+    }
+
+    public static <T> JcrQueryResult<T> findByPath(final String className, final String path, final String where,
+            Object... params) throws RepositoryException {
+        Class clazz = Play.classloader.getClassIgnoreCase(className);
+        return findBy(clazz, path, where, params);
+    }
+
+    public static <T> JcrQueryResult<T> findBy(final String className, final String where, Object... params)
+            throws RepositoryException {
+        Class clazz = Play.classloader.getClassIgnoreCase(className);
+        return findBy(clazz, getDefaultPath(clazz), where, params);
+    }
+
+    public static <T> JcrQueryResult<T> findBy(final Class<T> clazz, final String path, final String where,
+            Object... params) throws RepositoryException {
+        String nodeType = getMetadata(clazz).nodeType;
+        String queryString = JcrUtils.buildSelect(path, where, nodeType);
+        return executeQuery(clazz, queryString, params);
     }
 
     public static <T> T fromNode(Class<T> entityClass, Node node) throws JcrMappingException {
         return jcrom.fromNode(entityClass, node);
     }
 
-    public static <T> T fromNode(Class<T> arg0, Node arg1, String arg2, int arg3) throws JcrMappingException {
-        return jcrom.fromNode(arg0, arg1, arg2, arg3);
+    public static <T> T fromNode(Class<T> entityClass, Node node, String childNodeFilter, int maxDepth)
+            throws JcrMappingException {
+        return jcrom.fromNode(entityClass, node, childNodeFilter, maxDepth);
     }
 
     public static <T> T get(Class<T> clazz, String path) {
@@ -146,6 +171,11 @@ public class JcrMapper {
         return (T) get(clazz, path);
     }
 
+    public static <T extends Model> T get(String className) {
+        Class clazz = Play.classloader.getClassIgnoreCase(className);
+        return (T) get(clazz, getDefaultPath(clazz));
+    }
+
     public static String getDefaultPath(Class<?> modelClass) {
         return "/" + modelClass.getSimpleName().toLowerCase();
     }
@@ -154,16 +184,16 @@ public class JcrMapper {
         return jcrom.getName(arg0);
     }
 
+    public static ObservationManager getObservationManager() throws RepositoryException {
+        return getSession().getWorkspace().getObservationManager();
+    }
+
     public static String getPath(Object arg0) throws JcrMappingException {
         return jcrom.getPath(arg0);
     }
 
     public static QueryManager getQueryManager() throws RepositoryException {
         return getSession().getWorkspace().getQueryManager();
-    }
-
-    public static ObservationManager getObservationManager() throws RepositoryException {
-        return getSession().getWorkspace().getObservationManager();
     }
 
     public static long getSize(String rootPath) {
@@ -423,11 +453,11 @@ public class JcrMapper {
         return jcrom.updateNode(node, entity, arg2, arg3);
     }
 
-    // TODO Sanitize input or implement some sort of PreparedStatement
-    protected static <T> JcrQuery<T> executeQuery(Class<T> clazz, String queryString, Object... params)
+    protected static <T> JcrQueryResult<T> executeQuery(Class<T> clazz, String queryString, Object... params)
             throws RepositoryException {
-        QueryManager queryMan = getQueryManager();
-        Query query = queryMan.createQuery(String.format(queryString, params), Query.JCR_SQL2);
+        QueryManager queryManager = getQueryManager();
+        Query query = queryManager.createQuery(
+                (params == null) ? queryString : JcrUtils.queryFormat(queryString, params), Query.JCR_SQL2);
         QueryResult queryResult = query.execute();
         NodeIterator nodeItor = queryResult.getNodes();
         return toJcrQuery(clazz, nodeItor);
@@ -458,8 +488,8 @@ public class JcrMapper {
         }
     }
 
-    protected static <T> JcrQuery<T> toJcrQuery(final Class<T> clazz, NodeIterator nodeIterator) {
-        return new JcrQuery<T>(clazz, nodeIterator);
+    protected static <T> JcrQueryResult<T> toJcrQuery(final Class<T> clazz, NodeIterator nodeIterator) {
+        return new JcrQueryResult<T>(clazz, nodeIterator);
     }
 
     protected static <T> T update(Node node, T entity, String childNodeFilter, int maxDepth) {
@@ -515,5 +545,4 @@ public class JcrMapper {
     private JcrMapper() {
 
     }
-
 }

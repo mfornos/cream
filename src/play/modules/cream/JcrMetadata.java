@@ -12,10 +12,12 @@ public class JcrMetadata {
     public class MD {
         public String[] mixinTypes;
         public boolean isVersionable;
+        public String nodeType;
 
         public MD(Class<?> clazz) {
             this.mixinTypes = findMixins(clazz);
             this.isVersionable = checkIfVersionable(clazz);
+            this.nodeType = finNodeType(clazz);
         }
 
         private boolean checkIfVersionable(Class<?> clazz) {
@@ -36,6 +38,17 @@ public class JcrMetadata {
                 mixins = new ArrayUtils().EMPTY_STRING_ARRAY;
             }
             return mixins;
+        }
+
+        private String finNodeType(Class<?> clazz) {
+            String nodeType;
+            JcrNode jcrNode = ReflectionUtils.getJcrNodeAnnotation(clazz);
+            if (jcrNode != null) {
+                nodeType = jcrNode.nodeType();
+            } else {
+                nodeType = "nt:unstructured";
+            }
+            return nodeType;
         }
     }
 

@@ -1,20 +1,22 @@
-package play.modules.cream;
+package play.modules.cream.ocm;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import javax.jcr.NodeIterator;
 
-import play.modules.cream.ocm.JcrMapper;
-
-public class JcrQuery<T> {
+public class JcrQueryResult<T> {
 
     private final NodeIterator iterator;
     private final Class<T> entityClass;
 
-    public JcrQuery(Class<T> clazz, NodeIterator nodeIterator) {
+    public JcrQueryResult(Class<T> clazz, NodeIterator nodeIterator) {
         this.iterator = nodeIterator;
         this.entityClass = clazz;
+    }
+
+    public long count() {
+        return iterator.getSize();
     }
 
     /**
@@ -48,18 +50,6 @@ public class JcrQuery<T> {
     }
 
     /**
-     * Set the position to start
-     * 
-     * @param position
-     *            Position of the first element
-     * @return A new query
-     */
-    public JcrQuery from(int position) {
-        iterator.skip(position);
-        return this;
-    }
-
-    /**
      * Retrieve a page of result
      * 
      * @param page
@@ -87,15 +77,23 @@ public class JcrQuery<T> {
         return list;
     }
 
-    public boolean isEmpty() {
-        return iterator.getSize() < 1;
-    }
-
     public T first() {
         return (iterator.hasNext()) ? JcrMapper.fromNode(entityClass, iterator.nextNode()) : null;
     }
 
-    public long count() {
-        return iterator.getSize();
+    /**
+     * Set the position to start
+     * 
+     * @param position
+     *            Position of the first element
+     * @return A new query
+     */
+    public JcrQueryResult from(int position) {
+        iterator.skip(position);
+        return this;
+    }
+
+    public boolean isEmpty() {
+        return iterator.getSize() < 1;
     }
 }

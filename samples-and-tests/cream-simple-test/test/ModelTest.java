@@ -6,8 +6,8 @@ import models.Restaurant;
 import org.junit.Before;
 import org.junit.Test;
 
-import play.modules.cream.JcrQuery;
 import play.modules.cream.annotations.JcrSession;
+import play.modules.cream.ocm.JcrQueryResult;
 import play.test.Fixtures;
 import play.test.UnitTest;
 
@@ -22,9 +22,8 @@ public class ModelTest extends UnitTest {
     @Test
     public void testModel() throws RepositoryException {
         Fixtures.loadModels("data.yml");
-        // Session session = play.modules.cream.JcrPlugin.getCurrentSession();
-        // Dumper.dumpTree(session.getRootNode());
-        JcrQuery<Restaurant> restaurants = Restaurant.all("/restaurant");
+
+        JcrQueryResult<Restaurant> restaurants = Restaurant.all();
         assertEquals(2, restaurants.count());
         assertEquals("petit", restaurants.first().chef.name);
 

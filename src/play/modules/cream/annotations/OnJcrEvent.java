@@ -10,15 +10,15 @@ import java.lang.annotation.Target;
 @Inherited
 @Target(ElementType.TYPE)
 public @interface OnJcrEvent {
-    public int eventTypes();
-
     public String absPath();
 
-    public boolean noLocal() default false;
+    public int eventTypes();
 
     public boolean isDeep() default false;
 
-    public String[] uuid() default {};
-
     public String[] nodeTypeName() default {};
+
+    public boolean noLocal() default false;
+
+    public String[] uuid() default {};
 }

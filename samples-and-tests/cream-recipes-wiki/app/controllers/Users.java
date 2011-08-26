@@ -11,11 +11,9 @@ import org.jcrom.JcrMappingException;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.libs.Crypto;
-import play.modules.cream.JcrQuery;
+import play.modules.cream.ocm.JcrQueryResult;
 
 public class Users extends Application {
-
-    private static final String USERS_PATH = "/users";
 
     @Secure.Admin
     public static void add(User user) {
@@ -34,7 +32,8 @@ public class Users extends Application {
             flash.error("Please correct these errors !");
             add(user);
         }
-        user.path = USERS_PATH;
+        // if you want to create the user in another path set
+        // user.path = "/mypath";
         user.password = Crypto.passwordHash(user.password);
         user.create();
         Users.index(1);
@@ -67,7 +66,7 @@ public class Users extends Application {
 
     public static void index(Integer page) {
         page = (page != null && page > 0) ? page : 1;
-        JcrQuery<User> result = User.all(USERS_PATH);
+        JcrQueryResult<User> result = User.all();
         long nbUsers = result.count();
         Collection<User> users = result.fetch(page, pageSize);
         render(nbUsers, users, page);
@@ -76,9 +75,7 @@ public class Users extends Application {
     public static void show(String id, Integer page) {
         page = (page != null && page > 0) ? page : 1;
         User user = loadUser(id);
-        JcrQuery result = Recipe
-                .find("select * from [nt:unstructured] where ISDESCENDANTNODE('%s') AND author = '%s' order by [jcr:created] desc",
-                        Application.RECIPES_PATH, user.uuid);
+        JcrQueryResult result = Recipe.findBy("author = %s order by [jcr:created] desc", user.uuid);
         long nbRecipes = result.count();
         List<Recipe> recipes = result.fetch(page, pageSize);
         render(user, recipes, nbRecipes, page);
@@ -93,7 +90,7 @@ public class Users extends Application {
             edit(user.uuid);
         }
         user.merge();
-        show(user.uuid);
+        Users.show(user.uuid, 1);
     }
 
     private static User loadUser(String id) {

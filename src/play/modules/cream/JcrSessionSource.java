@@ -11,11 +11,11 @@ public class JcrSessionSource implements BeanSource {
         this.session = session;
     }
 
-    public <T> T getBeanOfType(Class<T> type) {
-        return (T) ((Session.class.isAssignableFrom(type)) ? session : null);
-    }
-
     public void close() {
         session.logout();
+    }
+
+    public <T> T getBeanOfType(Class<T> type) {
+        return (T) ((Session.class.isAssignableFrom(type)) ? session : null);
     }
 }

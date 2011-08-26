@@ -32,6 +32,8 @@ import play.db.Model.Factory;
 import play.db.Model.Property;
 import play.exceptions.UnexpectedException;
 import play.modules.cream.ocm.JcrMapper;
+import play.modules.cream.ocm.JcrQuery;
+import play.modules.cream.ocm.JcrQueryResult;
 
 public class JcrModelLoader implements Factory {
     private final Class<? extends Model> clazz;
@@ -43,16 +45,8 @@ public class JcrModelLoader implements Factory {
     @Override
     public Long count(List<String> searchFields, String keywords, String where) {
         // XXX Duplicate Query for count()... :(
-        StringBuilder q = buildSelect(searchFields, keywords, where);
-
-        JcrQuery<? extends Model> query;
-        try {
-            query = JcrMapper.find(clazz.getName(), q.toString(), JcrMapper.getDefaultPath(clazz));
-        } catch (RepositoryException e) {
-            throw new UnexpectedException(e);
-        }
-
-        return query.count();
+        JcrQueryResult<? extends Model> queryResult = doQuery(null, null, searchFields, keywords, where);
+        return queryResult.count();
     }
 
     @Override
@@ -75,21 +69,10 @@ public class JcrModelLoader implements Factory {
     @Override
     public List<Model> fetch(int offset, int size, String orderBy, String order, List<String> searchFields,
             String keywords, String where) {
-        StringBuilder q = buildSelect(searchFields, keywords, where);
-
-        if (orderBy != null) {
-            appendOrderBy(orderBy, order, q);
-        }
-
-        JcrQuery<? extends Model> query;
-        try {
-            query = JcrMapper.find(clazz.getName(), q.toString(), JcrMapper.getDefaultPath(clazz));
-        } catch (RepositoryException e) {
-            throw new UnexpectedException(e);
-        }
+        JcrQueryResult<? extends Model> queryResult = doQuery(orderBy, order, searchFields, keywords, where);
 
         int page = (offset > size) ? offset / size : 1;
-        return (List<Model>) query.fetch(page, size);
+        return (List<Model>) queryResult.fetch(page, size);
     }
 
     @Override
@@ -232,7 +215,7 @@ public class JcrModelLoader implements Factory {
     }
 
     private StringBuilder buildSelect(List<String> searchFields, String keywords, String where) {
-        StringBuilder q = new StringBuilder("select * from [nt:unstructured] where ischildnode('%s')");
+        StringBuilder q = new StringBuilder("select * from [nt:unstructured] where ischildnode(${path})");
         if (keywords != null && !keywords.equals("")) {
             String searchQuery = getSearchQuery(searchFields, keywords);
             if (!searchQuery.equals("")) {
@@ -244,6 +227,19 @@ public class JcrModelLoader implements Factory {
 
         q.append(where != null ? " and " + where : "");
         return q;
+    }
+
+    private JcrQueryResult<? extends Model> doQuery(String orderBy, String order, List<String> searchFields,
+            String keywords, String where) {
+        StringBuilder q = buildSelect(searchFields, keywords, where);
+
+        if (orderBy != null) {
+            appendOrderBy(orderBy, order, q);
+        }
+
+        JcrQuery query = JcrQuery.builder(clazz, q.toString()).setString("path", JcrMapper.getDefaultPath(clazz))
+                .setString("keywords", keywords).build();
+        return query.excute();
     }
 
     private String getSearchQuery(List<String> searchFields, String keywords) {
@@ -258,9 +254,7 @@ public class JcrModelLoader implements Factory {
                     }
                     q.append("contains(");
                     q.append(property.name);
-                    q.append(" ");
-                    q.append(keywords);
-                    q.append(')');
+                    q.append(", ${keywords})");
                 }
             }
         }

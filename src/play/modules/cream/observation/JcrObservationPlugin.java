@@ -24,6 +24,25 @@ public class JcrObservationPlugin extends PlayPlugin {
     public static List<EventListenerHolder> observers;
 
     @Override
+    public String getStatus() {
+        StringWriter sw = new StringWriter();
+        PrintWriter out = new PrintWriter(sw);
+        if (observers == null) {
+            out.println("Observers:");
+            out.println("~~~~~~~~~");
+            out.println("(not yet initialized)");
+            return sw.toString();
+        }
+        out.println("Observers:");
+        out.println("~~~~~~~~~");
+        out.println("Count: " + observers.size());
+        for (EventListenerHolder h : observers) {
+            out.println(String.format("%s on %s", h.getListener().getClass().getName(), h.getOnEvent().absPath()));
+        }
+        return sw.toString();
+    }
+
+    @Override
     public void onApplicationStart() {
         observers = new ArrayList<EventListenerHolder>();
         for (Class clazz : Play.classloader.getAllClasses()) {
@@ -42,25 +61,6 @@ public class JcrObservationPlugin extends PlayPlugin {
                 }
             }
         }
-    }
-
-    @Override
-    public String getStatus() {
-        StringWriter sw = new StringWriter();
-        PrintWriter out = new PrintWriter(sw);
-        if (observers == null) {
-            out.println("Observers:");
-            out.println("~~~~~~~~~");
-            out.println("(not yet initialized)");
-            return sw.toString();
-        }
-        out.println("Observers:");
-        out.println("~~~~~~~~~");
-        out.println("Count: " + observers.size());
-        for (EventListenerHolder h : observers) {
-            out.println(String.format("%s on %s", h.getListener().getClass().getName(), h.getOnEvent().absPath()));
-        }
-        return sw.toString();
     }
 
     @Override

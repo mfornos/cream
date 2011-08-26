@@ -23,8 +23,8 @@ public class JcrVersionMapper {
 
     public static <T> T getVersion(Class<T> clazz, String path, String versionName, String childNodeFilter, int maxDepth) {
         try {
-            return getVersion(clazz, getSession().getRootNode().getNode(JcrMapper.relativePath(path)),
-                    versionName, childNodeFilter, maxDepth);
+            return getVersion(clazz, getSession().getRootNode().getNode(JcrMapper.relativePath(path)), versionName,
+                    childNodeFilter, maxDepth);
         } catch (RepositoryException e) {
             throw new JcrMappingException("Could not get version", e);
         }
@@ -189,8 +189,7 @@ public class JcrVersionMapper {
                 Version version = versionIterator.nextVersion();
                 NodeIterator nodeIterator = version.getNodes();
                 while (nodeIterator.hasNext()) {
-                    T entityVersion = (T) JcrMapper.fromNode(clazz, nodeIterator.nextNode(), childNameFilter,
-                            maxDepth);
+                    T entityVersion = (T) JcrMapper.fromNode(clazz, nodeIterator.nextNode(), childNameFilter, maxDepth);
                     Version baseVersion = versionManager.getBaseVersion(node.getPath());
                     JcrMapper.setBaseVersionInfo(entityVersion, baseVersion.getName(), baseVersion.getCreated());
                     versionList.add(entityVersion);
@@ -219,8 +218,7 @@ public class JcrVersionMapper {
                 Version version = versionIterator.nextVersion();
                 NodeIterator nodeIterator = version.getNodes();
                 while (nodeIterator.hasNext()) {
-                    versionList.add((T) JcrMapper.fromNode(clazz, nodeIterator.nextNode(), childNameFilter,
-                            maxDepth));
+                    versionList.add((T) JcrMapper.fromNode(clazz, nodeIterator.nextNode(), childNameFilter, maxDepth));
                 }
                 counter++;
             }

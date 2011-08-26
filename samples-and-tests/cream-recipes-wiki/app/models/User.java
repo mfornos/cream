@@ -8,8 +8,8 @@ import play.data.validation.Email;
 import play.data.validation.MinSize;
 import play.data.validation.Required;
 import play.libs.Crypto;
-import play.modules.cream.JcrQuery;
 import play.modules.cream.Model;
+import play.modules.cream.ocm.JcrQueryResult;
 
 @JcrNode(mixinTypes = { "mix:created", "mix:lastModified", "mix:referenceable" })
 public class User extends Model {
@@ -34,7 +34,7 @@ public class User extends Model {
         return password.equals(Crypto.passwordHash(password2));
     }
 
-    public static JcrQuery<User> findByEmail(String email) {
-        return find("select * from [nt:unstructured] where ISDESCENDANTNODE('%s') AND email = '%s'", "/users", email);
+    public static JcrQueryResult<User> findByEmail(String email) {
+        return findBy("email = %s", email);
     }
 }

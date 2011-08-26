@@ -29,9 +29,19 @@ import play.data.binding.BeanWrapper;
 import play.data.validation.Validation;
 import play.exceptions.UnexpectedException;
 import play.modules.cream.ocm.JcrMapper;
+import play.modules.cream.ocm.JcrQueryResult;
 import play.utils.Utils;
 
 public abstract class Model implements play.db.Model {
+
+    /**
+     * Prepare a query to find *all* entities.
+     * 
+     * @return JcrQuery
+     */
+    public static JcrQueryResult all() {
+        throw new UnsupportedOperationException("Class not enhanced.");
+    }
 
     /**
      * Prepare a query to find *all* entities.
@@ -41,7 +51,7 @@ public abstract class Model implements play.db.Model {
      * 
      * @return JcrQuery
      */
-    public static JcrQuery all(String rootPath) {
+    public static JcrQueryResult all(String rootPath) {
         throw new UnsupportedOperationException("Class not enhanced.");
     }
 
@@ -50,7 +60,10 @@ public abstract class Model implements play.db.Model {
         try {
             Constructor c = type.getDeclaredConstructor();
             c.setAccessible(true);
-            Object model = c.newInstance();
+            Model model = (Model) c.newInstance();
+            if (model.path == null) {
+                model.path = JcrMapper.getDefaultPath(type);
+            }
             return (T) edit(model, name, params, annotations);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -161,7 +174,11 @@ public abstract class Model implements play.db.Model {
      *            Params to bind to the query
      * @return JcrQuery
      */
-    public static JcrQuery find(String query, Object... params) {
+    public static JcrQueryResult find(String query, Object... params) {
+        throw new UnsupportedOperationException("Class not enhanced.");
+    }
+
+    public static <T extends Model> List<T> findAll() {
         throw new UnsupportedOperationException("Class not enhanced.");
     }
 
@@ -174,6 +191,14 @@ public abstract class Model implements play.db.Model {
         throw new UnsupportedOperationException("Class not enhanced.");
     }
 
+    public static JcrQueryResult findBy(String where, Object... params) {
+        throw new UnsupportedOperationException("Class not enhanced.");
+    }
+
+    public static JcrQueryResult findByPath(String path, String where, Object... params) {
+        throw new UnsupportedOperationException("Class not enhanced.");
+    }
+
     /**
      * Find the entity with the corresponding id.
      * 
@@ -182,6 +207,10 @@ public abstract class Model implements play.db.Model {
      * @return The entity
      */
     public static <T extends Model> T findById(Object id) {
+        throw new UnsupportedOperationException("Class not enhanced.");
+    }
+
+    public static <T extends Model> T get() {
         throw new UnsupportedOperationException("Class not enhanced.");
     }
 

@@ -49,17 +49,17 @@ public class JcrRepositoryHelper {
         return session;
     }
 
-    public static void shutdown() {
-        if (RepositoryImpl.class.isAssignableFrom(repository.getClass())) {
-            ((RepositoryImpl) repository).shutdown();
-        }
+    public static Session openSession(SimpleCredentials credentials) {
+        return openSession(credentials, defaultWorkspace);
     }
 
     public static Session openSession(String workspace) {
         return openSession(defaultCredentials, workspace);
     }
 
-    public static Session openSession(SimpleCredentials credentials) {
-        return openSession(credentials, defaultWorkspace);
+    public static void shutdown() {
+        if (RepositoryImpl.class.isAssignableFrom(repository.getClass())) {
+            ((RepositoryImpl) repository).shutdown();
+        }
     }
 }

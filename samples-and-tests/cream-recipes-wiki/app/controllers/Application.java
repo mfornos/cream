@@ -25,9 +25,9 @@ import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.libs.MimeTypes;
-import play.modules.cream.JcrQuery;
 import play.modules.cream.annotations.JcrSession;
 import play.modules.cream.ocm.JcrMapper;
+import play.modules.cream.ocm.JcrQueryResult;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -36,12 +36,12 @@ import play.mvc.With;
 @With(Secure.class)
 public class Application extends Controller {
 
+    private static final String RECIPES_PATH = JcrMapper.getDefaultPath(Recipe.class);
     // If you need direct access to jcrSession
     // inject it and remove @JcrSession class annotation!
     // @Inject
     // static Session jcrSession;
 
-    public static final String RECIPES_PATH = "/recipes";
     static Integer pageSize = Integer.parseInt(Play.configuration.getProperty("tables.pageSize", "5"));
 
     public static void add(Recipe recipe) {
@@ -82,7 +82,8 @@ public class Application extends Controller {
             addImageToRecipe(recipe, image);
         }
         recipe.name = recipe.title;
-        recipe.path = RECIPES_PATH;
+        // if you want to create the recipe in another path set
+        // recipe.path = "/mypath";
         recipe.author = Secure.connectedUser();
         recipe.create();
         index(1);
@@ -111,9 +112,7 @@ public class Application extends Controller {
 
     public static void index(Integer page) {
         page = (page != null && page > 0) ? page : 1;
-        JcrQuery result = Recipe.find(
-                "select * from [nt:unstructured] where ISDESCENDANTNODE('%s') order by [jcr:created] desc",
-                RECIPES_PATH);
+        JcrQueryResult result = Recipe.findBy("order by [jcr:created] desc");
         long nbRecipes = result.count();
         List<Recipe> recipes = result.fetch(page, pageSize);
         render(nbRecipes, recipes, page);
@@ -130,21 +129,20 @@ public class Application extends Controller {
         index(1);
     }
 
-    public static void search(String search) {
+    public static void search(String query) {
         // Naive sanitize
-        search = search.replaceAll("[^\\w s]", "");
+        query = query.replaceAll("[^\\w s]", "");
 
         List<Recipe> recipes = new ArrayList<Recipe>();
-        if (StringUtils.isNotBlank(search)) {
+        if (StringUtils.isNotBlank(query)) {
             // XXX see
             // http://jackrabbit.510166.n4.nabble.com/Use-of-excerpt-with-SQL2-td3249018.html
             // waiting for excerpt support with SQL-2
             try {
                 QueryManager qm = JcrMapper.getQueryManager();
                 @SuppressWarnings("deprecation")
-                Query q = qm.createQuery(
-                        "select excerpt(.) from nt:unstructured where jcr:path like '/recipes/%' and contains(., '"
-                                + search + "') order by jcr:score desc", Query.SQL);
+                Query q = qm.createQuery("select excerpt(.) from nt:unstructured where jcr:path like '" + RECIPES_PATH
+                        + "/%' and contains(., '" + query + "') order by jcr:score desc", Query.SQL);
                 QueryResult result = q.execute();
                 for (RowIterator it = result.getRows(); it.hasNext();) {
                     Row r = it.nextRow();
@@ -159,7 +157,7 @@ public class Application extends Controller {
             }
         }
 
-        render(recipes, search);
+        render(recipes, query);
     }
 
     public static void show(String id) {

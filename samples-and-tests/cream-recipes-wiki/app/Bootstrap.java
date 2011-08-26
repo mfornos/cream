@@ -6,7 +6,6 @@ import play.jobs.Job;
 import play.jobs.OnApplicationStart;
 import play.modules.cream.helpers.JcrRepositoryHelper;
 import play.test.Fixtures;
-import controllers.Application;
 
 @OnApplicationStart
 public class Bootstrap extends Job {
@@ -18,7 +17,7 @@ public class Bootstrap extends Job {
     public void doJob() {
         Session session = JcrRepositoryHelper.openSession();
         try {
-            if (!session.nodeExists(Application.RECIPES_PATH)) {
+            if (!session.nodeExists("/recipe")) {
                 Fixtures.loadModels("initial-data.yml");
             }
         } catch (RepositoryException e) {

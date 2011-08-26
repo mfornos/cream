@@ -31,7 +31,7 @@ import play.modules.cream.ocm.JcrMapper;
  * Cream: JCR Plugin for Play! Framework
  * 
  */
-//TODO status
+// TODO status
 public class JcrPlugin extends PlayPlugin {
 
     private static ThreadLocal<JcrSessionSource> sessionSource = new ThreadLocal<JcrSessionSource>();
