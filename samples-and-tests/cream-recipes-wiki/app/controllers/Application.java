@@ -58,8 +58,7 @@ public class Application extends Controller {
             login();
         }
 
-        User user = null;
-        user = User.findByEmail(email).first();
+        User user = User.findByEmail(email).first();
 
         if (user == null || !user.checkPassword(password)) {
             flash.error("Bad email or bad password");
