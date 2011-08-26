@@ -118,7 +118,6 @@ public class MyController extends Controller {
             add(entity);
        }
        
-       entity.path = "/path";
        entity.create();
        
        index(1);
@@ -126,7 +125,7 @@ public class MyController extends Controller {
     
     public static void index(Integer page) {
         
-        JcrQuery result = MyEntity.findAll("/path");
+        JcrQuery result = MyEntity.all();
         long nbMyEntity = result.count();
         List<MyEntity> entities = result.fetch(page, pageSize);
         
