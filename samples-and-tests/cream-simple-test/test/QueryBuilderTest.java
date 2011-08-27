@@ -1,10 +1,10 @@
 import org.junit.Test;
 
-import play.modules.cream.annotations.NoJcrSession;
+import play.modules.cream.annotations.JcrNoSession;
 import play.modules.cream.ocm.JcrQuery;
 import play.test.UnitTest;
 
-@NoJcrSession
+@JcrNoSession
 public class QueryBuilderTest extends UnitTest {
     @Test
     public void testQuery() {

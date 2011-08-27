@@ -5,9 +5,9 @@ import javax.jcr.observation.EventIterator;
 import javax.jcr.observation.EventListener;
 
 import play.Logger;
-import play.modules.cream.annotations.OnJcrEvent;
+import play.modules.cream.annotations.JcrOnEvent;
 
-@OnJcrEvent(eventTypes = Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_CHANGED, absPath = "/", isDeep = true)
+@JcrOnEvent(eventTypes = Event.NODE_ADDED | Event.NODE_REMOVED | Event.PROPERTY_CHANGED, absPath = "/", isDeep = true)
 public class LoggingObserver implements EventListener {
 
     @Override

@@ -6,12 +6,10 @@ import models.Restaurant;
 import org.junit.Before;
 import org.junit.Test;
 
-import play.modules.cream.annotations.JcrSession;
 import play.modules.cream.ocm.JcrQueryResult;
 import play.test.Fixtures;
 import play.test.UnitTest;
 
-@JcrSession
 public class ModelTest extends UnitTest {
 
     @Before

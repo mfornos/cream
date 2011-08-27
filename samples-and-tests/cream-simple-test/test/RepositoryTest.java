@@ -4,11 +4,11 @@ import javax.jcr.SimpleCredentials;
 
 import org.junit.Test;
 
-import play.modules.cream.annotations.NoJcrSession;
+import play.modules.cream.annotations.JcrNoSession;
 import play.modules.cream.helpers.JcrRepositoryHelper;
 import play.test.UnitTest;
 
-@NoJcrSession
+@JcrNoSession
 public class RepositoryTest extends UnitTest {
 
     private static final String ANONYMOUS = "anonymous";

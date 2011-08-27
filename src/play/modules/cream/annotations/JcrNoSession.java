@@ -8,17 +8,7 @@ import java.lang.annotation.Target;
 
 @Retention(RetentionPolicy.RUNTIME)
 @Inherited
-@Target(ElementType.TYPE)
-public @interface OnJcrEvent {
-    public String absPath();
+@Target({ ElementType.TYPE, ElementType.METHOD })
+public @interface JcrNoSession {
 
-    public int eventTypes();
-
-    public boolean isDeep() default false;
-
-    public String[] nodeTypeName() default {};
-
-    public boolean noLocal() default false;
-
-    public String[] uuid() default {};
 }

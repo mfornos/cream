@@ -23,7 +23,7 @@ import play.PlayPlugin;
 import play.classloading.ApplicationClasses.ApplicationClass;
 import play.exceptions.UnexpectedException;
 import play.modules.cream.annotations.JcrSession;
-import play.modules.cream.annotations.NoJcrSession;
+import play.modules.cream.annotations.JcrNoSession;
 import play.modules.cream.helpers.JcrRepositoryCreationHelper;
 import play.modules.cream.helpers.JcrRepositoryHelper;
 import play.modules.cream.ocm.JcrMapper;
@@ -41,7 +41,7 @@ public class JcrPlugin extends PlayPlugin {
     @Override
     public void beforeInvocation() {
         InvocationContext current = InvocationContext.current();
-        if (!current.isAnnotationPresent(NoJcrSession.class)) {
+        if (!current.isAnnotationPresent(JcrNoSession.class)) {
             Session currentSession = createCurrentSession(current);
             JCR.addSession(currentSession);
         }

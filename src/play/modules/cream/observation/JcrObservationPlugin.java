@@ -14,7 +14,7 @@ import javax.jcr.observation.ObservationManager;
 import play.Logger;
 import play.Play;
 import play.PlayPlugin;
-import play.modules.cream.annotations.OnJcrEvent;
+import play.modules.cream.annotations.JcrOnEvent;
 
 /**
  * Plugin to register session-scoped observers in a Jcr workspace
@@ -48,7 +48,7 @@ public class JcrObservationPlugin extends PlayPlugin {
         observers = new ArrayList<EventListenerHolder>();
         for (Class clazz : Play.classloader.getAllClasses()) {
             if (EventListener.class.isAssignableFrom(clazz)) {
-                if (clazz.isAnnotationPresent(OnJcrEvent.class)) {
+                if (clazz.isAnnotationPresent(JcrOnEvent.class)) {
                     try {
                         EventListenerHolder holder = new EventListenerHolder(clazz);
                         observers.add(holder);
@@ -71,7 +71,7 @@ public class JcrObservationPlugin extends PlayPlugin {
             try {
                 ObservationManager observationMan = session.getWorkspace().getObservationManager();
                 for (EventListenerHolder h : observers) {
-                    OnJcrEvent onEvent = h.getOnEvent();
+                    JcrOnEvent onEvent = h.getOnEvent();
                     String[] nodeTypeName = onEvent.nodeTypeName();
                     String[] uuid = onEvent.uuid();
                     observationMan.addEventListener(h.getListener(), onEvent.eventTypes(), onEvent.absPath(), onEvent
