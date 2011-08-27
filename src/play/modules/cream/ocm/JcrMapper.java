@@ -21,6 +21,7 @@ import org.jcrom.Jcrom;
 
 import play.Play;
 import play.exceptions.UnexpectedException;
+import play.modules.cream.JCR;
 import play.modules.cream.JcrMetadata;
 import play.modules.cream.JcrMetadata.MD;
 import play.modules.cream.Model;
@@ -468,7 +469,7 @@ public class JcrMapper {
     }
 
     protected static Session getSession() {
-        return play.modules.cream.JcrPlugin.getCurrentSession();
+        return JCR.getSession();
     }
 
     protected static boolean hasMixinType(Node node, String mixinType) throws RepositoryException {

@@ -27,14 +27,15 @@ public class JcrObservationPlugin extends PlayPlugin {
     public String getStatus() {
         StringWriter sw = new StringWriter();
         PrintWriter out = new PrintWriter(sw);
+
+        out.println("Jcr Observers:");
+        out.println("~~~~~~~~~~~~~");
+
         if (observers == null) {
-            out.println("Observers:");
-            out.println("~~~~~~~~~");
             out.println("(not yet initialized)");
             return sw.toString();
         }
-        out.println("Observers:");
-        out.println("~~~~~~~~~");
+
         out.println("Count: " + observers.size());
         for (EventListenerHolder h : observers) {
             out.println(String.format("%s on %s", h.getListener().getClass().getName(), h.getOnEvent().absPath()));

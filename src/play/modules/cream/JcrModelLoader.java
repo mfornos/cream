@@ -52,7 +52,7 @@ public class JcrModelLoader implements Factory {
     @Override
     public void deleteAll() {
         try {
-            Session session = JcrPlugin.getCurrentSession();
+            Session session = JCR.getSession();
             try {
                 Node node = session.getNode(JcrMapper.getDefaultPath(clazz));
                 if (node != null) {

@@ -25,14 +25,12 @@ import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.libs.MimeTypes;
-import play.modules.cream.annotations.JcrSession;
 import play.modules.cream.ocm.JcrMapper;
 import play.modules.cream.ocm.JcrQueryResult;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
 
-@JcrSession
 @With(Secure.class)
 public class Application extends Controller {
 

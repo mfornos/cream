@@ -16,6 +16,8 @@ import javax.jcr.version.VersionManager;
 
 import org.jcrom.JcrMappingException;
 
+import play.modules.cream.JCR;
+
 public class JcrVersionMapper {
     public static <T> T getVersion(Class<T> clazz, String path, String versionName) {
         return getVersion(clazz, path, versionName, "*", -1);
@@ -163,7 +165,7 @@ public class JcrVersionMapper {
     }
 
     protected static Session getSession() {
-        return JcrMapper.getSession();
+        return JCR.getSession();
     }
 
     protected static <T> T getVersion(Class<T> clazz, Node node, String versionName, String childNodeFilter,

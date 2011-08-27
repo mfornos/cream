@@ -73,18 +73,24 @@ public class User extends Model {
 
 p. Note: model classes managed by Cream plugin must be annotated with @JcrNode (normally with at least mix:referenceable) but jcrom doesn't require it.
 
-You need to open a jcr session in order to access the model from the controllers. To achieve it you have these options:
+You need to open a Jcr session in order to access the model from the controllers. To achieve it you have these options:
 
-1) Annotate a Controller with @JcrSession
+0) Do nothing, Cream automatically binds a session per invocation. 
 
-bc.. @JcrSession
-public class Application extends Controller {
+bc.. public class MyController extends Controller {
+    ...
+}
+
+p. If you want to control session parameters (p.ex: the workspace), use @JcrSession
+
+bc.. @JcrSession(workspace="myWorkspace")
+public class MyController extends Controller {
     ...
 }
 
 p. 2) Inject a session in the Controller with @Inject
 
-bc.. public class Application extends Controller {
+bc.. public class MyController extends Controller {
 
     @Inject
     static javax.jcr.Session jcrSession;
@@ -95,7 +101,7 @@ bc.. public class Application extends Controller {
 p. 3) Do it manually
 
 bc.. public void someMethod() {
-    Session session = JcrPlugin.getCurrentSession();
+    Session session = JCR.getSession();
     try {
         ...
     } finally {
@@ -103,10 +109,16 @@ bc.. public void someMethod() {
     }
 }
 
+p. In some situations may be desirable that Cream didn't open a Jcr session for the invocation, use @JcrNoSession for that effect
+
+bc.. @JcrNoSession
+public class MyController extends Controller {
+    ...
+}
+
 p. An example of Controller
 
-bc.. @JcrSession
-public class MyController extends Controller {
+bc.. public class MyController extends Controller {
     
     ...
     
@@ -117,7 +129,7 @@ public class MyController extends Controller {
        
        entity.create();
        
-       index(1);
+       ...
     }
     
     public static void index(Integer page) {
@@ -133,14 +145,13 @@ public class MyController extends Controller {
    ...
 }
 
-p. Note: if you don't specify a jcr path the simple class name will be used by default.
+p. Note: if you don't specify a Jcr path for the entity, the simple class name will be used by default. If you need to save the entity in another path, set myEntity.path = "/mypath".
 
-See cream/samples-and-test for more examples...
+See cream/samples-and-test for more examples.
 
-p. To use Cream with CRUD simply annotate your  Controller with @JcrSession
+p. To use Cream with CRUD simply do nothing special
 
-bc.. @JcrSession
-public class Users extends CRUD {
+bc.. public class Users extends CRUD {
 
 }
 

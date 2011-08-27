@@ -1,5 +1,7 @@
 package play.modules.cream;
 
+import java.io.PrintWriter;
+import java.io.StringWriter;
 import java.lang.annotation.Annotation;
 import java.util.List;
 import java.util.Map;
@@ -20,7 +22,6 @@ import play.Play;
 import play.PlayPlugin;
 import play.classloading.ApplicationClasses.ApplicationClass;
 import play.exceptions.UnexpectedException;
-import play.inject.Injector;
 import play.modules.cream.annotations.JcrSession;
 import play.modules.cream.annotations.NoJcrSession;
 import play.modules.cream.helpers.JcrRepositoryCreationHelper;
@@ -31,18 +32,10 @@ import play.modules.cream.ocm.JcrMapper;
  * Cream: JCR Plugin for Play! Framework
  * 
  */
-// TODO status
 public class JcrPlugin extends PlayPlugin {
-
-    private static ThreadLocal<JcrSessionSource> sessionSource = new ThreadLocal<JcrSessionSource>();
-
-    public static Session getCurrentSession() {
-        return sessionSource.get().getBeanOfType(Session.class);
-    }
-
     @Override
     public void afterInvocation() {
-        closeSession();
+        JCR.closeSession();
     }
 
     @Override
@@ -50,8 +43,7 @@ public class JcrPlugin extends PlayPlugin {
         InvocationContext current = InvocationContext.current();
         if (!current.isAnnotationPresent(NoJcrSession.class)) {
             Session currentSession = createCurrentSession(current);
-            sessionSource.set(new JcrSessionSource(currentSession));
-            Injector.inject(sessionSource.get());
+            JCR.addSession(currentSession);
         }
     }
 
@@ -94,8 +86,34 @@ public class JcrPlugin extends PlayPlugin {
     }
 
     @Override
+    public String getStatus() {
+        StringWriter sw = new StringWriter();
+        PrintWriter out = new PrintWriter(sw);
+
+        out.println("Jcr Repository:");
+        out.println("~~~~~~~~~~~~~~");
+
+        if (JcrRepositoryHelper.repository == null) {
+            out.println("(not yet initialized)");
+            return sw.toString();
+        }
+
+        out.println("name: " + JcrRepositoryHelper.repository.getDescriptor(Repository.REP_NAME_DESC));
+        out.println("version: " + JcrRepositoryHelper.repository.getDescriptor(Repository.REP_VERSION_DESC));
+        out.println("default workspace: " + JcrRepositoryHelper.defaultWorkspace);
+
+        out.println("\nJcr Mapped Classes:");
+        out.println("~~~~~~~~~~~~~~~~~~");
+        for (Class clazz : JcrMapper.jcrom.getMappedClasses()) {
+            out.println(clazz.getName());
+        }
+
+        return sw.toString();
+    }
+
+    @Override
     public void invocationFinally() {
-        closeSession();
+        JCR.closeSession();
     }
 
     @Override
@@ -116,15 +134,7 @@ public class JcrPlugin extends PlayPlugin {
 
     @Override
     public void onInvocationException(Throwable e) {
-        closeSession();
-    }
-
-    private void closeSession() {
-        JcrSessionSource currentSessionSource = sessionSource.get();
-        if (currentSessionSource != null) {
-            currentSessionSource.close();
-            sessionSource.set(null);
-        }
+        JCR.closeSession();
     }
 
     private Session createCurrentSession(InvocationContext current) {
