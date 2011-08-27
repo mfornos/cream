@@ -10,7 +10,6 @@ import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
 import javax.jcr.nodetype.NodeType;
-import javax.jcr.observation.ObservationManager;
 import javax.jcr.query.Query;
 import javax.jcr.query.QueryManager;
 import javax.jcr.query.QueryResult;
@@ -112,19 +111,20 @@ public class JcrMapper {
         }
     }
 
-    public static <T> JcrQueryResult<T> findAll(String className, String rootPath) {
-        return findAll(Play.classloader.getClassIgnoreCase(className), rootPath);
-    }
-
     public static <T> JcrQueryResult<T> findAll(String className) {
         Class clazz = Play.classloader.getClassIgnoreCase(className);
         return findAll(clazz, getDefaultPath(clazz));
     }
 
-    public static <T> JcrQueryResult<T> findByPath(final String className, final String path, final String where,
+    public static <T> JcrQueryResult<T> findAll(String className, String rootPath) {
+        return findAll(Play.classloader.getClassIgnoreCase(className), rootPath);
+    }
+
+    public static <T> JcrQueryResult<T> findBy(final Class<T> clazz, final String path, final String where,
             Object... params) throws RepositoryException {
-        Class clazz = Play.classloader.getClassIgnoreCase(className);
-        return findBy(clazz, path, where, params);
+        String nodeType = getMetadata(clazz).nodeType;
+        String queryString = JcrUtils.buildSelect(path, where, nodeType);
+        return executeQuery(clazz, queryString, params);
     }
 
     public static <T> JcrQueryResult<T> findBy(final String className, final String where, Object... params)
@@ -133,11 +133,10 @@ public class JcrMapper {
         return findBy(clazz, getDefaultPath(clazz), where, params);
     }
 
-    public static <T> JcrQueryResult<T> findBy(final Class<T> clazz, final String path, final String where,
+    public static <T> JcrQueryResult<T> findByPath(final String className, final String path, final String where,
             Object... params) throws RepositoryException {
-        String nodeType = getMetadata(clazz).nodeType;
-        String queryString = JcrUtils.buildSelect(path, where, nodeType);
-        return executeQuery(clazz, queryString, params);
+        Class clazz = Play.classloader.getClassIgnoreCase(className);
+        return findBy(clazz, path, where, params);
     }
 
     public static <T> T fromNode(Class<T> entityClass, Node node) throws JcrMappingException {
@@ -167,14 +166,14 @@ public class JcrMapper {
         }
     }
 
-    public static <T extends Model> T get(String className, String path) {
-        Class clazz = Play.classloader.getClassIgnoreCase(className);
-        return (T) get(clazz, path);
-    }
-
     public static <T extends Model> T get(String className) {
         Class clazz = Play.classloader.getClassIgnoreCase(className);
         return (T) get(clazz, getDefaultPath(clazz));
+    }
+
+    public static <T extends Model> T get(String className, String path) {
+        Class clazz = Play.classloader.getClassIgnoreCase(className);
+        return (T) get(clazz, path);
     }
 
     public static String getDefaultPath(Class<?> modelClass) {
@@ -185,16 +184,8 @@ public class JcrMapper {
         return jcrom.getName(arg0);
     }
 
-    public static ObservationManager getObservationManager() throws RepositoryException {
-        return getSession().getWorkspace().getObservationManager();
-    }
-
     public static String getPath(Object arg0) throws JcrMappingException {
         return jcrom.getPath(arg0);
-    }
-
-    public static QueryManager getQueryManager() throws RepositoryException {
-        return getSession().getWorkspace().getQueryManager();
     }
 
     public static long getSize(String rootPath) {
@@ -456,7 +447,7 @@ public class JcrMapper {
 
     protected static <T> JcrQueryResult<T> executeQuery(Class<T> clazz, String queryString, Object... params)
             throws RepositoryException {
-        QueryManager queryManager = getQueryManager();
+        QueryManager queryManager = JCR.getQueryManager();
         Query query = queryManager.createQuery(
                 (params == null) ? queryString : JcrUtils.queryFormat(queryString, params), Query.JCR_SQL2);
         QueryResult queryResult = query.execute();

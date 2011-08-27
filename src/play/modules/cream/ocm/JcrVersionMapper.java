@@ -8,7 +8,6 @@ import javax.jcr.Node;
 import javax.jcr.NodeIterator;
 import javax.jcr.RepositoryException;
 import javax.jcr.Session;
-import javax.jcr.UnsupportedRepositoryOperationException;
 import javax.jcr.version.Version;
 import javax.jcr.version.VersionHistory;
 import javax.jcr.version.VersionIterator;
@@ -98,11 +97,6 @@ public class JcrVersionMapper {
         }
     }
 
-    public static VersionManager getVersionManager() throws UnsupportedRepositoryOperationException,
-            RepositoryException {
-        return getSession().getWorkspace().getVersionManager();
-    }
-
     public static long getVersionSize(String path) {
         try {
             return getVersionSize(getSession().getRootNode().getNode(JcrMapper.relativePath(path)));
@@ -171,7 +165,7 @@ public class JcrVersionMapper {
     protected static <T> T getVersion(Class<T> clazz, Node node, String versionName, String childNodeFilter,
             int maxDepth) {
         try {
-            VersionManager versionManager = getVersionManager();
+            VersionManager versionManager = JCR.getVersionManager();
             VersionHistory versionHistory = versionManager.getVersionHistory(node.getPath());
             Version version = versionHistory.getVersion(versionName);
             return (T) JcrMapper.fromNode(clazz, version.getNodes().nextNode(), childNodeFilter, maxDepth);
@@ -183,7 +177,7 @@ public class JcrVersionMapper {
     protected static <T> List<T> getVersionList(Class<?> clazz, Node node, String childNameFilter, int maxDepth) {
         try {
             List<T> versionList = new ArrayList<T>();
-            VersionManager versionManager = getVersionManager();
+            VersionManager versionManager = JCR.getVersionManager();
             VersionHistory versionHistory = versionManager.getVersionHistory(node.getPath());
             VersionIterator versionIterator = versionHistory.getAllVersions();
             versionIterator.skip(1);
@@ -207,7 +201,7 @@ public class JcrVersionMapper {
             long startIndex, long resultSize) {
         try {
             List<T> versionList = new ArrayList<T>();
-            VersionManager versionManager = getVersionManager();
+            VersionManager versionManager = JCR.getVersionManager();
             VersionHistory versionHistory = versionManager.getVersionHistory(node.getPath());
             VersionIterator versionIterator = versionHistory.getAllVersions();
             versionIterator.skip(1 + startIndex);
@@ -232,7 +226,7 @@ public class JcrVersionMapper {
 
     protected static long getVersionSize(Node node) {
         try {
-            VersionManager versionManager = getVersionManager();
+            VersionManager versionManager = JCR.getVersionManager();
             VersionHistory versionHistory = versionManager.getVersionHistory(node.getPath());
             return versionHistory.getAllVersions().getSize() - 1;
         } catch (RepositoryException e) {
@@ -242,7 +236,7 @@ public class JcrVersionMapper {
 
     protected static void removeVersion(Node node, String versionName) {
         try {
-            VersionManager versionManager = getVersionManager();
+            VersionManager versionManager = JCR.getVersionManager();
             versionManager.getVersionHistory(node.getPath()).removeVersion(versionName);
         } catch (RepositoryException e) {
             throw new JcrMappingException("Could not remove version", e);
@@ -251,7 +245,7 @@ public class JcrVersionMapper {
 
     protected static void restoreVersion(Node node, String versionName, boolean removeExisting) {
         try {
-            VersionManager versionManager = getVersionManager();
+            VersionManager versionManager = JCR.getVersionManager();
             versionManager.checkout(node.getPath());
             versionManager.restore(node.getPath(), versionName, removeExisting);
         } catch (RepositoryException e) {

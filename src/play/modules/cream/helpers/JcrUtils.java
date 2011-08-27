@@ -3,6 +3,28 @@ package play.modules.cream.helpers;
 import org.apache.commons.lang.StringUtils;
 
 public class JcrUtils {
+    public static String buildSelect(final String path, final String where, String nodeType) {
+        StringBuilder queryString = new StringBuilder("select * from ");
+        queryString.append('[');
+        queryString.append(nodeType);
+        queryString.append(']');
+        boolean hasPath = StringUtils.isNotBlank(path);
+        boolean hasWhere = StringUtils.isNotBlank(where);
+        if (hasPath || hasWhere) {
+            queryString.append(" where ");
+            if (hasPath) {
+                queryString.append("ISCHILDNODE('");
+                queryString.append(JcrUtils.escapeSingleQuote(path));
+                queryString.append("')");
+            }
+            if (hasPath && hasWhere && !where.toLowerCase().startsWith("order by")) {
+                queryString.append(" and ");
+            }
+            queryString.append(where);
+        }
+        return queryString.toString();
+    }
+
     /**
      * Escapes characters that expects to be escaped by a preceding '{@code \}'
      * or for quote like characters by the character itself.
@@ -41,27 +63,5 @@ public class JcrUtils {
             }
         }
         return String.format(queryString, params);
-    }
-
-    public static String buildSelect(final String path, final String where, String nodeType) {
-        StringBuilder queryString = new StringBuilder("select * from ");
-        queryString.append('[');
-        queryString.append(nodeType);
-        queryString.append(']');
-        boolean hasPath = StringUtils.isNotBlank(path);
-        boolean hasWhere = StringUtils.isNotBlank(where);
-        if (hasPath || hasWhere) {
-            queryString.append(" where ");
-            if (hasPath) {
-                queryString.append("ISCHILDNODE('");
-                queryString.append(JcrUtils.escapeSingleQuote(path));
-                queryString.append("')");
-            }
-            if (hasPath && hasWhere && !where.toLowerCase().startsWith("order by")) {
-                queryString.append(" and ");
-            }
-            queryString.append(where);
-        }
-        return queryString.toString();
     }
 }

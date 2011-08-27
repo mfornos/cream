@@ -25,6 +25,7 @@ import play.data.validation.Email;
 import play.data.validation.Required;
 import play.data.validation.Valid;
 import play.libs.MimeTypes;
+import play.modules.cream.JCR;
 import play.modules.cream.ocm.JcrMapper;
 import play.modules.cream.ocm.JcrQueryResult;
 import play.mvc.Before;
@@ -136,7 +137,7 @@ public class Application extends Controller {
             // http://jackrabbit.510166.n4.nabble.com/Use-of-excerpt-with-SQL2-td3249018.html
             // waiting for excerpt support with SQL-2
             try {
-                QueryManager qm = JcrMapper.getQueryManager();
+                QueryManager qm = JCR.getQueryManager();
                 @SuppressWarnings("deprecation")
                 Query q = qm.createQuery("select excerpt(.) from nt:unstructured where jcr:path like '" + RECIPES_PATH
                         + "/%' and contains(., '" + query + "') order by jcr:score desc", Query.SQL);

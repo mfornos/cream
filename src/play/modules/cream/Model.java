@@ -195,10 +195,6 @@ public abstract class Model implements play.db.Model {
         throw new UnsupportedOperationException("Class not enhanced.");
     }
 
-    public static JcrQueryResult findByPath(String path, String where, Object... params) {
-        throw new UnsupportedOperationException("Class not enhanced.");
-    }
-
     /**
      * Find the entity with the corresponding id.
      * 
@@ -207,6 +203,10 @@ public abstract class Model implements play.db.Model {
      * @return The entity
      */
     public static <T extends Model> T findById(Object id) {
+        throw new UnsupportedOperationException("Class not enhanced.");
+    }
+
+    public static JcrQueryResult findByPath(String path, String where, Object... params) {
         throw new UnsupportedOperationException("Class not enhanced.");
     }
 
