@@ -75,7 +75,7 @@ p. Note: model classes managed by Cream plugin must be annotated with @JcrNode (
 
 You need to open a Jcr session in order to access the model from the controllers. To achieve it you have these options:
 
-0) Do nothing, Cream automatically binds a session per invocation. 
+1) Do nothing, Cream automatically binds a session per invocation. 
 
 bc.. public class MyController extends Controller {
     ...
