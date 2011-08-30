@@ -20,7 +20,7 @@ h2. <a name="fts">Features</a>
 
 * Data binding and validation
 
-h2. <a name="usg">Usage</a>
+h2. <a name="inst">Installation</a>
 
 Install locally this module
 
@@ -34,6 +34,8 @@ bc.. require:
 p. and let Play download and install the dependencies 
 
 bc.. $ play deps
+
+h2. <a name="usg">Usage</a>
     
 p. Configure Cream in conf/application.conf
 
