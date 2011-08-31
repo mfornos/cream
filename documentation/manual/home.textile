@@ -194,7 +194,7 @@ public class MyVersionableEntity extends Model {
 
 p. The following properties are automatically available for your entity: String versionName, Date baseVersionCreated, Date versionCreated and boolean checkedout. 
 
-p. To obtain the version list for an instance of your versionable entity, make a call to @myEntity.getVersions()@. This call will return the versions of your entity as a ==List<MyVersionableEntity>==.
+p. To obtain the version list for an instance of your versionable entity, make a call to @myEntity.getVersions()@.
 
 p. To restore a version: @JcrVersionMapper.restoreVersionByUUID(yourEntityId, versionNameToRestore);@
 
