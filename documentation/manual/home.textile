@@ -185,7 +185,7 @@ public class LoggingObserver implements EventListener {
 
 h2. <a name="vers">Content Versioning</a>
 
-Make sure that "mix:versionable" mixin is set on your @JcrNode annotation of your entity:
+Make sure that "mix:versionable" mixin is set on the @JcrNode annotation of your entity:
 
 bc.. @JcrNode(mixinTypes = { "mix:created", "mix:lastModified", "mix:versionable" })
 public class MyVersionableEntity extends Model {
