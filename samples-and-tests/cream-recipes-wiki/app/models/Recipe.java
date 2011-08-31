@@ -13,7 +13,7 @@ import play.modules.cream.Model;
 @JcrNode(mixinTypes = { "mix:created", "mix:lastModified", "mix:versionable" })
 public class Recipe extends Model {
 
-    public enum AccessLevel {
+    public static enum AccessLevel {
         PUBLIC, PRIVATE
     }
 

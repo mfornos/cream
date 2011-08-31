@@ -1,0 +1,44 @@
+#{extends 'main.html' /}
+#{set title:'History of '+recipe.title /}
+
+#{set 'bread'}
+	<div id="breadcrumbs">
+		<a href="@{Application.index}">Recipes</a> / <a href="@{Application.show(recipe.uuid)}">${recipe.title}</a> / <a href="@{Application.history(recipe.uuid)}">History</a> / <span class="selected">${recipeVersion.versionName}</span>
+	</div>
+#{/set}
+
+<div id="recipe">
+	<div class="header">
+		<div class="contextual">
+			#{if editable == true}
+				<a href="@{Application.restore(recipe.uuid, recipeVersion.versionName)}" class="button">Restore</a>
+				#{if connected && (connected.admin || recipe.isOwner(connected.uuid))}
+					<a href="@{Application.deleteVersion(recipe.uuid, recipeVersion.versionName)}" onclick="return confirm('Are you sure?');" class="button" >Delete</a>
+				#{/if}
+			#{/if}
+		</div>
+		<div>
+			<a style="float: left;" href="@{Users.show(recipeVersion.author.uuid)}">
+				#{gravatar.img recipeVersion.author.email, size:40, default:'identicon' /}
+			</a>
+			<div style="float: left; margin-left:10px;">
+				<a class="author" href="@{Users.show(recipeVersion.author.uuid)}">${recipeVersion.author.email}</a>
+				<br/>
+				<span class="date">${recipeVersion.created.format('dd MMM yyyy')}</span> (${recipeVersion.versionName})	${recipeVersion.accessLevel}</span>
+			</div>
+		</div>
+	</div>
+	<div class="description">
+		${recipeVersion.description}
+	</div>
+	<div class="content">
+		<div class="images">
+			#{if recipeVersion.image}
+			   <img class="pict" src="@{Application.getImage(recipeVersion.uuid)}" />
+			#{/if}
+		</div>
+		<div class="body">
+			${recipeVersion.body.raw()}
+		</div>
+	</div>
+</div>

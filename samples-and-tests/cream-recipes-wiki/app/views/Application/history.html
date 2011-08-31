@@ -1,0 +1,28 @@
+#{extends 'main.html' /}
+#{set title:'History of '+recipe.title /}
+
+#{set 'bread'}
+	<div id="breadcrumbs">
+		<a href="@{Application.index}">Recipes</a> / <a href="@{Application.show(recipe.uuid)}">${recipe.title}</a> / <span class="selected">History</span>
+	</div>
+#{/set}
+
+<table id="users-list" class="gray zebra-striped">
+	<thead>
+		<tr>
+			<th class="red">Version</th>
+			<th class="red">Date</th>
+		</tr>
+	</thead>
+	#{list items:recipe.versions, as:'recipeVersion'}
+		<tr>
+			<td>
+				<a href="@{Application.showVersion(recipe.uuid, recipeVersion.uuid)}">${recipeVersion.versionName}</a>
+			</td>
+			<td>
+				${recipeVersion.versionCreated}
+			</td>
+		</tr>
+	#{/list}
+</table>
+

@@ -13,11 +13,11 @@ import javax.jcr.query.Row;
 import javax.jcr.query.RowIterator;
 
 import models.Recipe;
-import models.Recipe.AccessLevel;
 import models.User;
 
 import org.apache.commons.lang.StringUtils;
 import org.jcrom.JcrFile;
+import org.jcrom.JcrMappingException;
 
 import play.Logger;
 import play.Play;
@@ -28,6 +28,7 @@ import play.libs.MimeTypes;
 import play.modules.cream.JCR;
 import play.modules.cream.ocm.JcrMapper;
 import play.modules.cream.ocm.JcrQueryResult;
+import play.modules.cream.ocm.JcrVersionMapper;
 import play.mvc.Before;
 import play.mvc.Controller;
 import play.mvc.With;
@@ -37,7 +38,6 @@ public class Application extends Controller {
 
     private static final String RECIPES_PATH = JcrMapper.getDefaultPath(Recipe.class);
     // If you need direct access to jcrSession
-    // inject it and remove @JcrSession class annotation!
     // @Inject
     // static Session jcrSession;
 
@@ -45,8 +45,7 @@ public class Application extends Controller {
 
     public static void add(Recipe recipe) {
         recipe = (recipe == null) ? new Recipe() : recipe;
-        AccessLevel[] accessLevels = AccessLevel.values();
-        render(recipe, accessLevels);
+        render(recipe);
     }
 
     public static void authenticate(@Required @Email String email, @Required String password) {
@@ -95,17 +94,30 @@ public class Application extends Controller {
         index(1);
     }
 
+    public static void deleteVersion(String id, String versionName) {
+        try {
+            JcrVersionMapper.removeVersionByUUID(id, versionName);
+            flash.success("Version %s deleted", versionName);
+        } catch (JcrMappingException e) {
+            flash.error(e.getMessage());
+        }
+        history(id);
+    }
+
     public static void edit(String id) {
         Recipe recipe = getRecipeAndCheck(id);
-        AccessLevel[] accessLevels = AccessLevel.values();
-        render(recipe, accessLevels);
+        render(recipe);
     }
 
     public static void getImage(String id) {
-        Recipe recipe = Recipe.findById(id);
-        notFoundIfNull(recipe);
+        Recipe recipe = getRecipe(id);
         response.setContentTypeIfNotSet(recipe.image.getMimeType());
         renderBinary(recipe.image.getDataProvider().getInputStream());
+    }
+
+    public static void history(String id) {
+        Recipe recipe = getRecipe(id);
+        render(recipe);
     }
 
     public static void index(Integer page) {
@@ -125,6 +137,12 @@ public class Application extends Controller {
         flash.success("You've been logged out");
         session.clear();
         index(1);
+    }
+
+    public static void restore(String id, String versionName) {
+        JcrVersionMapper.restoreVersionByUUID(id, versionName);
+        flash.success("Version %s restored", versionName);
+        show(id);
     }
 
     public static void search(String query) {
@@ -159,10 +177,16 @@ public class Application extends Controller {
     }
 
     public static void show(String id) {
-        Recipe recipe = Recipe.findById(id);
-        notFoundIfNull(recipe);
+        Recipe recipe = getRecipe(id);
         boolean editable = Secure.checkRecipeAccess(recipe);
         render(recipe, editable);
+    }
+
+    public static void showVersion(String id, String vid) {
+        Recipe recipe = getRecipe(id);
+        Recipe recipeVersion = getRecipe(vid);
+        boolean editable = Secure.checkRecipeAccess(recipe);
+        render(recipe, recipeVersion, editable);
     }
 
     public static void update(@Valid Recipe recipe, File image) {
@@ -194,9 +218,14 @@ public class Application extends Controller {
         recipe.image = JcrFile.fromFile("picture", image, MimeTypes.getContentType(image.getName()));
     }
 
-    private static Recipe getRecipeAndCheck(String id) {
+    private static Recipe getRecipe(String id) {
         Recipe recipe = Recipe.findById(id);
         notFoundIfNull(recipe);
+        return recipe;
+    }
+
+    private static Recipe getRecipeAndCheck(String id) {
+        Recipe recipe = getRecipe(id);
         Secure.checkRecipeAccess(recipe);
         return recipe;
     }

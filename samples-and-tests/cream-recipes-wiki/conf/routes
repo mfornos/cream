@@ -14,6 +14,10 @@ POST    /add                                    Application.create
 GET     /edit/{id}                              Application.edit
 POST    /edit                                   Application.update
 GET     /show/{id}                              Application.show
+GET     /history/{id}                           Application.history
+GET     /version/show/{id}/{vid}                Application.showVersion
+GET     /version/delete/{id}/{versionName}      Application.deleteVersion
+GET     /version/restore/{id}/{versionName}     Application.restore
 
 # Users page
 

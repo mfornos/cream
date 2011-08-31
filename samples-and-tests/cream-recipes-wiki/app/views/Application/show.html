@@ -16,7 +16,7 @@
 		<div class="contextual">
 			#{if editable == true}
 				<a href="@{Application.edit(recipe.uuid)}" class="button">Edit</a>
-				<a href="" class="button">History</a>
+				<a href="@{Application.history(recipe.uuid)}" class="button">History</a>
 				#{if connected && (connected.admin || recipe.isOwner(connected.uuid))}
 					<a href="@{Application.delete(recipe.uuid)}" onclick="return confirm('Are you sure?');" class="button" >Delete</a>
 				#{/if}
@@ -29,7 +29,7 @@
 			<div style="float: left; margin-left:10px;">
 				<a class="author" href="@{Users.show(recipe.author.uuid)}">${recipe.author.email}</a>
 				<br/>
-				<span class="date">${recipe.created.format('dd MMM yyyy')}</span> (${recipe.version})	${recipe.accessLevel}</span>
+				<span class="date">${recipe.created.format('dd MMM yyyy')}</span> (${recipe.versionName})	${recipe.accessLevel}</span>
 			</div>
 		</div>
 	</div>

@@ -30,6 +30,7 @@ import play.data.validation.Validation;
 import play.exceptions.UnexpectedException;
 import play.modules.cream.ocm.JcrMapper;
 import play.modules.cream.ocm.JcrQueryResult;
+import play.modules.cream.ocm.JcrVersionMapper;
 import play.utils.Utils;
 
 public abstract class Model implements play.db.Model {
@@ -300,8 +301,12 @@ public abstract class Model implements play.db.Model {
         return uuid;
     }
 
-    public String getVersion() {
+    public String getVersionName() {
         return versionName;
+    }
+
+    public <T> List<T> getVersions() {
+        return JcrVersionMapper.getVersionList(this.getClass(), path);
     }
 
     public boolean isCheckedout() {

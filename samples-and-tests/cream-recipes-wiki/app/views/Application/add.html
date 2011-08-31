@@ -74,12 +74,12 @@
 		</li>
 		<li>
 			<label>Accesss</label>
-			#{select 'recipe.accessLevel', id:'accessLevel', items:accessLevels, value:recipe.accessLevel /}
+			#{select 'recipe.accessLevel', id:'accessLevel', items:models.Recipe.AccessLevel.values(), value:recipe.accessLevel /}
 	        <span class="error">#{error 'recipe.accessLevel' /}</span>
 		</li>
 	  </ol>
 	</fieldset>
 	<p class="buttons">
-		<input type="submit" value="Save" id="saveButton" /> <a href="@{Application.show(recipe.uuid)}" class="cancel">Cancel</a>  
+		<input type="submit" value="Save" id="saveButton" /> <a href="@{Application.index}" class="cancel">Cancel</a>  
 	</p>	
 </form>
