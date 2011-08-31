@@ -91,7 +91,8 @@ public class JcrQuery {
         this.formattedQuery = format(builder.query, builder.params);
         this.clazz = builder.clazz;
     }
-
+    
+    @SuppressWarnings("unchecked")
     public <T> JcrQueryResult<T> excute() {
         try {
             return (JcrQueryResult<T>) JcrMapper.executeQuery(clazz, this.formattedQuery);

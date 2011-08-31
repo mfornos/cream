@@ -33,6 +33,7 @@ import play.modules.cream.ocm.JcrQueryResult;
 import play.modules.cream.ocm.JcrVersionMapper;
 import play.utils.Utils;
 
+@SuppressWarnings("unchecked")
 public abstract class Model implements play.db.Model {
 
     /**
@@ -56,12 +57,12 @@ public abstract class Model implements play.db.Model {
         throw new UnsupportedOperationException("Class not enhanced.");
     }
 
-    public static <T extends Model> T create(Class<?> type, String name, Map<String, String[]> params,
+    public static <T extends Model> T create(Class<T> type, String name, Map<String, String[]> params,
             Annotation[] annotations) {
         try {
             Constructor c = type.getDeclaredConstructor();
             c.setAccessible(true);
-            Model model = (Model) c.newInstance();
+            T model = (T) c.newInstance();
             if (model.path == null) {
                 model.path = JcrMapper.getDefaultPath(type);
             }
@@ -71,6 +72,7 @@ public abstract class Model implements play.db.Model {
         }
     }
 
+    @SuppressWarnings("unchecked")
     public static <T extends Model> T edit(Object o, String name, Map<String, String[]> params, Annotation[] annotations) {
         try {
             BeanWrapper bw = new BeanWrapper(o.getClass());
@@ -276,6 +278,7 @@ public abstract class Model implements play.db.Model {
      * 
      * @return The deleted entity.
      */
+    @SuppressWarnings("unchecked")
     public <T extends Model> T delete() {
         _delete();
         return (T) this;
@@ -306,7 +309,7 @@ public abstract class Model implements play.db.Model {
     }
 
     public <T> List<T> getVersions() {
-        return JcrVersionMapper.getVersionList(this.getClass(), path);
+        return (List<T>) JcrVersionMapper.getVersionList(this.getClass(), path);
     }
 
     public boolean isCheckedout() {

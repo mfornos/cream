@@ -1,0 +1,24 @@
+# Test data
+
+Chef(petit):
+  name: petit
+  
+Restaurant(celler):
+   name: celler
+   description: Celler can mata
+   phoneNumber: 89-999-00-00
+   chef: petit
+   
+Restaurant(mussol):
+   name: mussol
+   description: Mussol restaurant
+   phoneNumber: 89-444-00-00
+   chef: petit
+
+Company(flashlight): 
+   name: flashlight
+   title: Flash light catering
+   description: Yet another catering company
+   phoneNumber: 00-111-00-01
+   restaurants: [celler, mussol]
+   

@@ -67,12 +67,13 @@ public class JcrModelLoader implements Factory {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public List<Model> fetch(int offset, int size, String orderBy, String order, List<String> searchFields,
             String keywords, String where) {
-        JcrQueryResult<? extends Model> queryResult = doQuery(orderBy, order, searchFields, keywords, where);
-
+        JcrQueryResult<Model> queryResult = (JcrQueryResult<Model>) doQuery(orderBy, order, searchFields, keywords,
+                where);
         int page = (offset > size) ? offset / size : 1;
-        return (List<Model>) queryResult.fetch(page, size);
+        return queryResult.fetch(page, size);
     }
 
     @Override
@@ -165,7 +166,6 @@ public class JcrModelLoader implements Factory {
         }
         if (field.getType().isEnum()) {
             modelProperty.choices = new Model.Choices() {
-
                 @SuppressWarnings("unchecked")
                 public List<Object> list() {
                     return (List<Object>) Arrays.asList(field.getType().getEnumConstants());

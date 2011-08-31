@@ -15,6 +15,7 @@ public class JcrSessionSource implements BeanSource {
         session.logout();
     }
 
+    @SuppressWarnings("unchecked")
     public <T> T getBeanOfType(Class<T> type) {
         return (T) ((Session.class.isAssignableFrom(type)) ? session : null);
     }

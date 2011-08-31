@@ -44,6 +44,7 @@ public class JcrObservationPlugin extends PlayPlugin {
     }
 
     @Override
+    @SuppressWarnings("unchecked")
     public void onApplicationStart() {
         observers = new ArrayList<EventListenerHolder>();
         for (Class clazz : Play.classloader.getAllClasses()) {

@@ -28,6 +28,7 @@ import play.modules.cream.helpers.JcrUtils;
 import play.modules.cream.helpers.NullAwareBeanUtilsBean;
 
 // TODO replace some strategic exceptions with return null
+@SuppressWarnings("unchecked")
 public class JcrMapper {
 
     // Jcrom is thread-safe
@@ -94,7 +95,7 @@ public class JcrMapper {
 
     public static <T> JcrQueryResult<T> find(final String className, final String queryString, Object... params)
             throws RepositoryException {
-        Class clazz = Play.classloader.getClassIgnoreCase(className);
+        Class<T> clazz = Play.classloader.getClassIgnoreCase(className);
         return executeQuery(clazz, queryString, params);
     }
 
@@ -112,7 +113,7 @@ public class JcrMapper {
     }
 
     public static <T> JcrQueryResult<T> findAll(String className) {
-        Class clazz = Play.classloader.getClassIgnoreCase(className);
+        Class<T> clazz = Play.classloader.getClassIgnoreCase(className);
         return findAll(clazz, getDefaultPath(clazz));
     }
 
@@ -129,13 +130,13 @@ public class JcrMapper {
 
     public static <T> JcrQueryResult<T> findBy(final String className, final String where, Object... params)
             throws RepositoryException {
-        Class clazz = Play.classloader.getClassIgnoreCase(className);
+        Class<T> clazz = Play.classloader.getClassIgnoreCase(className);
         return findBy(clazz, getDefaultPath(clazz), where, params);
     }
 
     public static <T> JcrQueryResult<T> findByPath(final String className, final String path, final String where,
             Object... params) throws RepositoryException {
-        Class clazz = Play.classloader.getClassIgnoreCase(className);
+        Class<T> clazz = Play.classloader.getClassIgnoreCase(className);
         return findBy(clazz, path, where, params);
     }
 
@@ -160,20 +161,22 @@ public class JcrMapper {
             } catch (RepositoryException e) {
                 throw new JcrMappingException("Could not get node", e);
             }
-            return (T) jcrom.fromNode(clazz, node, childNodeFilter, maxDepth);
+            return jcrom.fromNode(clazz, node, childNodeFilter, maxDepth);
         } else {
             return null;
         }
     }
-
+    
+    @SuppressWarnings("unchecked")
     public static <T extends Model> T get(String className) {
-        Class clazz = Play.classloader.getClassIgnoreCase(className);
-        return (T) get(clazz, getDefaultPath(clazz));
+        Class<T> clazz = Play.classloader.getClassIgnoreCase(className);
+        return get(clazz, getDefaultPath(clazz));
     }
-
+    
+    @SuppressWarnings("unchecked")
     public static <T extends Model> T get(String className, String path) {
-        Class clazz = Play.classloader.getClassIgnoreCase(className);
-        return (T) get(clazz, path);
+        Class<T> clazz = Play.classloader.getClassIgnoreCase(className);
+        return get(clazz, path);
     }
 
     public static String getDefaultPath(Class<?> modelClass) {
@@ -213,9 +216,10 @@ public class JcrMapper {
             // throw new JcrMappingException("Could not load node", e);
             return null;
         }
-        return (T) jcrom.fromNode(clazz, node, childNodeFilter, maxDepth);
+        return jcrom.fromNode(clazz, node, childNodeFilter, maxDepth);
     }
 
+    @SuppressWarnings("unchecked")
     public static <T extends Model> T loadByUUID(String className, String uuid) {
         return (T) loadByUUID(Play.classloader.getClassIgnoreCase(className), uuid);
     }
@@ -370,10 +374,10 @@ public class JcrMapper {
      *            restrictions are set on the depth).
      * @return a list of objects mapped from the nodes
      */
-    public static <T> List<T> toList(Class<?> clazz, NodeIterator nodeIterator, String childNameFilter, int maxDepth) {
+    public static <T> List<T> toList(Class<T> clazz, NodeIterator nodeIterator, String childNameFilter, int maxDepth) {
         List<T> objects = new ArrayList<T>();
         while (nodeIterator.hasNext()) {
-            objects.add((T) jcrom.fromNode(clazz, nodeIterator.nextNode(), childNameFilter, maxDepth));
+            objects.add(jcrom.fromNode(clazz, nodeIterator.nextNode(), childNameFilter, maxDepth));
         }
         return objects;
     }
@@ -395,7 +399,7 @@ public class JcrMapper {
      *            the number of items to retrieve from the iterator
      * @return a list of objects mapped from the nodes
      */
-    public static <T> List<T> toList(Class<?> clazz, NodeIterator nodeIterator, String childNameFilter, int maxDepth,
+    public static <T> List<T> toList(Class<T> clazz, NodeIterator nodeIterator, String childNameFilter, int maxDepth,
             long resultSize) {
         List<T> objects = new ArrayList<T>();
         long counter = 0;
@@ -403,7 +407,7 @@ public class JcrMapper {
             if (counter == resultSize) {
                 break;
             }
-            objects.add((T) jcrom.fromNode(clazz, nodeIterator.nextNode(), childNameFilter, maxDepth));
+            objects.add(jcrom.fromNode(clazz, nodeIterator.nextNode(), childNameFilter, maxDepth));
             counter++;
         }
         return objects;
