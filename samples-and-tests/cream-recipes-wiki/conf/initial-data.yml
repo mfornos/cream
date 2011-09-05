@@ -2,14 +2,12 @@
 
 User(demo):
    name:     demo
-   path:     /users
    email:    demo@demo.info
    password: /gHOKn+6yPr67XyYKgTiKQ== #demo
    admin:    false
 
 User(admin):
    name:     admin
-   path:     /users
    email:    admin@demo.info
    password: /gHOKn+6yPr67XyYKgTiKQ== #demo
    admin:    true
@@ -18,7 +16,6 @@ User(admin):
    
 Recipe(momRecipe):
    name: mom recipe
-   path: /recipes
    title: My mother's recipe
    description: > 
                 This is my mother's recipe. Everyone, German or not, loves it. It is easy to double the recipe as well. 
@@ -94,7 +91,6 @@ Recipe(momRecipe):
    
 Recipe(orangeCake):
    name: orange cake
-   path: /recipes
    title: Spectacular orange cake
    description: >
                 An orange layer cake filled with a luscious orange curd and frosted with a fluffy orange buttercream frosting.
