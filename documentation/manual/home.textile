@@ -2,7 +2,7 @@ h1. Cream module
 
 A module that seamlessly integrates Apache Jackrabbit (JCR 2.0) with Play framework.
 
-h2. <a name="usg">Usage</a>
+h2. Usage
     
 p. Configure Cream in conf/application.conf
 
@@ -126,7 +126,7 @@ bc.. public class Users extends CRUD {
 
 p. You can use Fixtures normally for your tests and initial data loading.
 
-h2. <a name="sch">Full Text Search</a>
+h3. Full Text Search
 
 Jackrabbit is able to index binary content and text, of course. <a href="http://jackrabbit.apache.org/jackrabbit-text-extractors.html">Jackrabbit text extractors</a>
 
@@ -167,7 +167,7 @@ try {
 
 p. For a pragmatic reference of SQL-2 take a look at the official Jackrabbit tests: <a href="http://svn.apache.org/viewvc/jackrabbit/trunk/jackrabbit-spi-commons/src/test/resources/org/apache/jackrabbit/spi/commons/query/sql2/test.sql2.txt?view=markup">Jackrabbit SQL-2 tests</a>
 
-h2. <a name="obs">Repository Observers</a>
+h3. Repository Observers
 
 To observe repository events create a class that implements javax.jcr.EventListener and annotate it with @JcrOnEvent. Cream will automatically register it for the current session.
 
@@ -183,7 +183,7 @@ public class LoggingObserver implements EventListener {
     }
 }
 
-h2. <a name="vers">Content Versioning</a>
+h3. Content Versioning
 
 Make sure that "mix:versionable" mixin is set on the @JcrNode annotation of your entity:
 
@@ -200,4 +200,12 @@ p. To restore a version: @JcrVersionMapper.restoreVersionByUUID(yourEntityId, ve
 
 p. To delete a version: @JcrVersionMapper.removeVersionByUUID(yourEntityId, versionName);@
 
-p. //
+p. Have fun! 
+
+h2. References
+
+* <a href="http://jackrabbit.apache.org/">Apache Jackrabbit</a>
+* <a href="http://code.google.com/p/jcrom/">jcrom</a>
+
+
+// and more to come...
