@@ -160,7 +160,7 @@ public class JcrRepositoryCreationHelper {
             return createUrlRemoteRepository(url);
         } else {
             throw new RuntimeException(
-                    "Unsupported repository location url. Only prefix rmi:// and file:// are supported");
+                    "Unsupported repository location url. Only prefix rmi://, file:// or http:// are supported");
         }
     }
      /**
