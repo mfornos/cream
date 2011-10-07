@@ -12,6 +12,7 @@ import javax.jcr.Repository;
 import org.apache.jackrabbit.core.RepositoryImpl;
 import org.apache.jackrabbit.core.config.RepositoryConfig;
 
+import org.apache.jackrabbit.rmi.repository.URLRemoteRepository;
 import play.Play;
 import play.exceptions.UnexpectedException;
 import play.vfs.VirtualFile;
@@ -140,7 +141,7 @@ public class JcrRepositoryCreationHelper {
 
     /**
      * Creates a jackrabbit repository based on the url. Accepted urls are
-     * <code>rmi://</code> and <code>file://</code>
+     * <code>rmi://</code> , <code>file://</code> and <code>http://</code>
      * 
      * @param url
      *            repository url
@@ -155,9 +156,28 @@ public class JcrRepositoryCreationHelper {
             return createRmiRepository(url);
         } else if (url.startsWith("file://")) {
             return createFileRepository(url, repoConfiguration);
+        } else if (url.startsWith("http://")) {
+            return createUrlRemoteRepository(url);
         } else {
             throw new RuntimeException(
                     "Unsupported repository location url. Only prefix rmi:// and file:// are supported");
+        }
+    }
+     /**
+     * Creates a repository at the location specified by the url. Url must start
+     * with <code>http://</code>.
+     *
+     * @param url
+     *            repository home url
+     * @return repository instance
+     * @throws RuntimeException
+     *             if repository could not be created
+     */
+    public static Repository createUrlRemoteRepository(String url) {
+        try {
+            return new URLRemoteRepository(url);
+        } catch (Exception e) {
+            throw new RuntimeException("Could not create url remote repository instance at url: " + url, e);
         }
     }
 
